@@ -26,6 +26,7 @@
     "cmdk": "^0.2.1",
     "date-fns": "^3.3.1",
     "lucide-react": "^0.471.0",
+    "mongoose": "^8.9.4",
     "next": "14.1.0",
     "next-cloudinary": "^6.16.0",
     "next-intl": "^3.11.3",
