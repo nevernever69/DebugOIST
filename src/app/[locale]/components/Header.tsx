@@ -4,10 +4,17 @@ import { Link } from '@/src/navigation'
 import { useTranslations } from 'next-intl'
 import { FC } from 'react'
 import GithubIcon from '../../icons/github'
-import LogoIcon from '../../icons/logo'
+// import LogoIcon from '../../icons/logo'
 import LangSwitcher from './LangSwitcher'
 import ThemeSwitch from './ThemeSwitch'
-import { SignInButton, SignUpButton, UserButton, SignedIn, SignedOut } from '@clerk/nextjs'
+import {
+  SignInButton,
+  // SignUpButton,
+  UserButton,
+  SignedIn,
+  SignedOut,
+  Protect
+} from '@clerk/nextjs'
 
 interface Props {
   locale: string
@@ -20,12 +27,8 @@ export const Header: FC<Props> = ({ locale }) => {
     <div className='mx-auto flex max-w-screen-2xl flex-row items-center justify-between p-5'>
       <Link lang={locale} href='/'>
         <div className='flex flex-row items-center'>
-          <div className='mb-2 h-14 w-14'>
-
-          </div>
-          <strong className='mx-2 text-3xl select-none'>Debug</strong>
-
-
+          <div className='mb-2 h-14 w-14'></div>
+          <strong className='mx-2 select-none text-3xl'>Debug</strong>
         </div>
       </Link>
       <div className='flex flex-row items-center gap-3'>
@@ -39,6 +42,11 @@ export const Header: FC<Props> = ({ locale }) => {
             <Link lang={locale} href={`/dashboard`}>
               Dashboard
             </Link>
+            <Protect fallback={<></>} role={'org:admin'}>
+              <Link lang={locale} href={`/admin`}>
+                Admin
+              </Link>
+            </Protect>
           </SignedIn>
         </nav>
 
@@ -47,30 +55,26 @@ export const Header: FC<Props> = ({ locale }) => {
 
         <SignedOut>
           <div className='flex gap-3'>
-            <SignInButton mode="modal">
-              <button className="px-4 py-2 rounded-md bg-blue-500 text-white hover:bg-blue-600 transition">
+            <SignInButton mode='modal'>
+              <button className='rounded-md bg-blue-500 px-4 py-2 text-white transition hover:bg-blue-600'>
                 {t('Sign in')}
               </button>
             </SignInButton>
-
           </div>
         </SignedOut>
 
         <SignedIn>
-          <UserButton 
-            afterSignOutUrl="/"
+          <UserButton
+            afterSignOutUrl='/'
             appearance={{
               elements: {
-                avatarBox: "w-10 h-10"
+                avatarBox: 'w-10 h-10'
               }
             }}
           />
         </SignedIn>
 
-        <a
-          href='https://github.com/Nev-Labs'
-          target='_blank'
-        >
+        <a href='https://github.com/Nev-Labs' target='_blank'>
           <div className='size-8'>
             <GithubIcon />
           </div>
