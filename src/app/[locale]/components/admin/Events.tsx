@@ -1,5 +1,5 @@
 'use client'
-import React from 'react'
+import React, { useEffect } from 'react'
 import {
   Card,
   CardContent,
@@ -73,7 +73,7 @@ const EventsComponent: React.FC = () => {
     }
   }
 
-  const { addEvent, loading } = useEvent()
+  const { addEvent, loading, events, getEvents } = useEvent()
 
   const onSubmit: SubmitHandler<FormDataType> = async data => {
     try {
@@ -95,45 +95,12 @@ const EventsComponent: React.FC = () => {
     }
   }
 
+  useEffect(() => {
+    getEvents()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+
   const eventRef = React.useRef<HTMLButtonElement>(null)
-  const events = [
-    {
-      id: 1,
-      name: 'Event 1',
-      description: 'Description 1',
-      thumbnail: 'https://via.placeholder.com/150',
-      date: '2021-08-01',
-      time: '12:00',
-      registration: new Date('2021-07-01').getTime()
-    },
-    {
-      id: 2,
-      name: 'Event 2',
-      description: 'Description 2',
-      thumbnail: 'https://via.placeholder.com/150',
-      date: '2021-08-02',
-      time: '12:00',
-      registration: new Date('2025-07-02').getTime()
-    },
-    {
-      id: 3,
-      name: 'Event 3',
-      description: 'Description 3',
-      thumbnail: 'https://via.placeholder.com/150',
-      date: '2021-08-03',
-      time: '12:00',
-      registration: new Date('2021-07-03').getTime()
-    },
-    {
-      id: 4,
-      name: 'Event 4',
-      description: 'Description 4',
-      thumbnail: 'https://via.placeholder.com/150',
-      date: '2021-08-04',
-      time: '12:00',
-      registration: new Date('2025-07-04').getTime()
-    }
-  ]
   return (
     <>
       <Card>
@@ -168,8 +135,8 @@ const EventsComponent: React.FC = () => {
             </TableHeader>
             <TableBody>
               {events.map(event => (
-                <TableRow key={event.id}>
-                  <TableCell colSpan={2}>{event.name}</TableCell>
+                <TableRow key={event.publicId}>
+                  <TableCell colSpan={2}>{event.title}</TableCell>
                   <TableCell>{event.date}</TableCell>
                   <TableCell>{event.time}</TableCell>
                   <TableCell>

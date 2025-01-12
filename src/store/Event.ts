@@ -4,11 +4,12 @@ import { immer } from 'zustand/middleware/immer'
 import axios from 'axios'
 
 type EventProps = {
-  name: string
+  title: string
   description: string
   date: number
   time: number
   registration: number
+  publicId: string
 }
 
 interface EventStoreProps {
@@ -60,7 +61,7 @@ const useEvent = create<EventStoreProps>()(
         updateEvent: async (oldEvent, newEvent) => {
           set(state => {
             state.events = state.events.map(event => {
-              if (event.name === oldEvent) {
+              if (event.title === oldEvent) {
                 return {
                   ...event,
                   name: newEvent
@@ -75,7 +76,7 @@ const useEvent = create<EventStoreProps>()(
             set({ loading: true })
             const req = await axios.get('/api/events')
             set({
-              events: req.data,
+              events: req.data.events,
               error: null
             })
           } catch (e: any) {

@@ -21,6 +21,7 @@ interface CloudinaryUploadResult {
   [key: string]: any
 }
 
+// upload image to cloudinary and create event
 export async function POST(request: NextRequest) {
   try {
     // @ts-ignore
@@ -87,6 +88,24 @@ export async function POST(request: NextRequest) {
     console.log(e, 'Event creation failed')
     return NextResponse.json(
       { error: 'Event creation failed' },
+      { status: 500 }
+    )
+  } finally {
+    await mongoose.disconnect()
+  }
+}
+
+// fetch the event from Mongo DB
+
+export async function GET() {
+  try {
+    await connect()
+    const events = await Event.find()
+    return NextResponse.json({ events }, { status: 200 })
+  } catch (e) {
+    console.log(e, 'Failed to fetch events')
+    return NextResponse.json(
+      { error: 'Failed to fetch events' },
       { status: 500 }
     )
   } finally {
