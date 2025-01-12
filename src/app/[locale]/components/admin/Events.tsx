@@ -114,7 +114,7 @@ const EventsComponent: React.FC = () => {
         >
           <div
             className={
-              'flex h-72 w-1/2 cursor-pointer flex-col items-center justify-center space-y-4 rounded-lg border-4 border-dashed p-4'
+              'flex h-72 w-1/2 cursor-pointer flex-col items-center justify-center space-y-4 rounded-lg border-4 border-dashed border-primary p-4'
             }
             onClick={() => eventRef.current?.click()}
           >
