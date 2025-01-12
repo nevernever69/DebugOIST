@@ -134,38 +134,56 @@ const EventsComponent: React.FC = () => {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {events.map(event => (
-                <TableRow key={event.publicId}>
-                  <TableCell colSpan={2}>{event.title}</TableCell>
-                  <TableCell>{event.date}</TableCell>
-                  <TableCell>{event.time}</TableCell>
-                  <TableCell>
-                    {event.registration > Date.now() ? 'Open' : 'Closed'}
-                  </TableCell>
-                  <TableCell>
-                    <DropdownMenu>
-                      <DropdownMenuTrigger>
-                        <MoreHorizontal className={'text-primary'} />
-                      </DropdownMenuTrigger>
-                      <DropdownMenuContent
-                        align={'end'}
-                        className={'bg-dropdown'}
-                      >
-                        <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                        <DropdownMenuSeparator
-                          className={'mx-auto bg-selected'}
-                        />
-                        <DropdownMenuItem className={'cursor-pointer'}>
-                          View Details
-                        </DropdownMenuItem>
-                        <DropdownMenuItem className={'cursor-pointer'}>
-                          Update
-                        </DropdownMenuItem>
-                      </DropdownMenuContent>
-                    </DropdownMenu>
+              {events.length > 0 &&
+                events.map(event => (
+                  <TableRow key={event.publicId}>
+                    <TableCell colSpan={2}>{event.title}</TableCell>
+                    <TableCell>{event.date}</TableCell>
+                    <TableCell>{event.time}</TableCell>
+                    <TableCell>
+                      {event.registration > Date.now() ? 'Open' : 'Closed'}
+                    </TableCell>
+                    <TableCell>
+                      <DropdownMenu>
+                        <DropdownMenuTrigger>
+                          <MoreHorizontal className={'text-primary'} />
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent
+                          align={'end'}
+                          className={'bg-dropdown'}
+                        >
+                          <DropdownMenuLabel>Actions</DropdownMenuLabel>
+                          <DropdownMenuSeparator
+                            className={'mx-auto bg-selected'}
+                          />
+                          <DropdownMenuItem className={'cursor-pointer'}>
+                            View Details
+                          </DropdownMenuItem>
+                          <DropdownMenuItem className={'cursor-pointer'}>
+                            Update
+                          </DropdownMenuItem>
+                        </DropdownMenuContent>
+                      </DropdownMenu>
+                    </TableCell>
+                  </TableRow>
+                ))}
+
+              {events.length == 0 && (
+                <TableRow
+                  className={
+                    'w-full text-center text-lg font-medium text-primary'
+                  }
+                >
+                  <TableCell
+                    className={
+                      'p-10 text-center text-lg font-medium text-primary'
+                    }
+                    colSpan={6}
+                  >
+                    No events found!
                   </TableCell>
                 </TableRow>
-              ))}
+              )}
             </TableBody>
             <TableFooter>
               <TableRow>
