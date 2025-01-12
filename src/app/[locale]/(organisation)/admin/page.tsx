@@ -1,4 +1,3 @@
-'use client'
 import { Skeleton } from '@/components/ui/skeleton'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import EventsComponent from '@/src/app/[locale]/components/admin/Events'
