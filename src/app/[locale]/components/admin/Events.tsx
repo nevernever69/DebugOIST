@@ -1,5 +1,5 @@
 'use client'
-import React from 'react'
+import React, { useEffect } from 'react'
 import {
   Card,
   CardContent,
@@ -26,18 +26,9 @@ import {
   DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu'
 import { MoreHorizontal } from 'lucide-react'
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger
-} from '@/components/ui/dialog'
 import { Label } from '@/components/ui/label'
 import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
-import { DatePickerDemo } from '@/components/ui/DataPicker'
 import {
   Sheet,
   SheetTrigger,
@@ -51,8 +42,22 @@ import {
 
 import { Button } from '@/components/ui/button'
 import { Separator } from '@/components/ui/separator'
+import { useForm, SubmitHandler } from 'react-hook-form'
+import { formSchema, FormDataType } from '@/src/Schema/Event'
+import { zodResolver } from '@hookform/resolvers/zod'
+import useEvent from '@/src/store/Event'
 
 const EventsComponent: React.FC = () => {
+  const {
+    handleSubmit,
+    register,
+    reset,
+    setValue,
+    watch,
+    formState: { errors, isSubmitted }
+  } = useForm<FormDataType>({
+    resolver: zodResolver(formSchema)
+  })
   const [preview, setPreview] = React.useState<string | null>(null)
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -61,8 +66,42 @@ const EventsComponent: React.FC = () => {
       const reader = new FileReader()
       reader.onloadend = () => setPreview(reader.result as string)
       reader.readAsDataURL(file)
+      setValue('thumbnail', file)
     }
   }
+
+  const watchFile = watch('thumbnail')
+
+  useEffect(() => {
+    console.log('errors', errors)
+    console.log('isSubmitted', isSubmitted)
+    console.log('watchFile', watchFile)
+  }, [errors, isSubmitted])
+
+  const { addEvent, loading, error } = useEvent()
+
+  const onSubmit: SubmitHandler<FormDataType> = async data => {
+    try {
+      console.log('submitting form...')
+      const newForm = new FormData()
+      newForm.append('name', data.name)
+      newForm.append('description', data.description)
+      newForm.append('thumbnail', data.thumbnail as File)
+      newForm.append('date', data.date)
+      newForm.append('time', data.time)
+      newForm.append('registration', data.registration)
+
+      console.log('form data', newForm)
+
+      await addEvent(newForm)
+    } catch (e: any) {
+      console.error('error adding event', e)
+    } finally {
+      setPreview(null)
+      reset()
+    }
+  }
+
   const eventRef = React.useRef<HTMLButtonElement>(null)
   const events = [
     {
@@ -146,9 +185,7 @@ const EventsComponent: React.FC = () => {
                   <TableCell>
                     <DropdownMenu>
                       <DropdownMenuTrigger>
-                        <Button variant={'ghost'} className='h-8 w-8 p-0'>
-                          <MoreHorizontal className={'text-primary'} />
-                        </Button>
+                        <MoreHorizontal className={'text-primary'} />
                       </DropdownMenuTrigger>
                       <DropdownMenuContent
                         align={'end'}
@@ -190,14 +227,17 @@ const EventsComponent: React.FC = () => {
             </SheetDescription>
           </SheetHeader>
           <Separator className={'mx-auto my-10 bg-primary'} />
-          <div className={'mt-10 flex flex-col space-y-4'}>
+          <form
+            onSubmit={handleSubmit(onSubmit)}
+            className={'mt-10 flex flex-col space-y-4'}
+          >
             <div className={'flex flex-col space-y-2'}>
               <Label htmlFor={'name'}>Name</Label>
-              <Input id={'name'} />
+              <Input id={'name'} {...register('name')} />
             </div>
             <div className={'flex flex-col space-y-2'}>
               <Label htmlFor={'description'}>Description</Label>
-              <Textarea id={'description'} />
+              <Textarea id={'description'} {...register('description')} />
             </div>
             <div className='flex flex-col space-y-4'>
               <Label
@@ -238,13 +278,12 @@ const EventsComponent: React.FC = () => {
               <Input
                 id='thumbnail'
                 className='hidden'
-                accept='image/*'
+                // accept='image/*'
                 type='file'
                 onChange={handleFileChange}
               />
               <Button
                 variant='ghost'
-                onClick={() => setPreview(null)}
                 disabled={!preview}
                 className='mx-auto w-1/2'
               >
@@ -253,38 +292,44 @@ const EventsComponent: React.FC = () => {
             </div>
             <div className={'flex flex-col space-y-2'}>
               <Label htmlFor={'date'}>Date</Label>
-              <Input id={'date'} type={'date'} />
+              <Input id={'date'} type={'date'} {...register('date')} />
             </div>
             <div className={'flex flex-col space-y-2'}>
               <Label htmlFor={'time'}>Time</Label>
-              <Input id={'time'} type={'time'} />
+              <Input id={'time'} type={'time'} {...register('time')} />
             </div>
 
             <div className={'flex flex-col space-y-2'}>
               <Label htmlFor={'registration'}>Registration</Label>
-              <Input id={'registration'} type={'date'} />
+              <Input
+                id={'registration'}
+                type={'date'}
+                {...register('registration')}
+              />
             </div>
-          </div>
-          <SheetFooter className={'my-4'}>
-            <SheetClose asChild className={'mr-4'}>
-              Cancel
-            </SheetClose>
             <div className={'flex flex-grow justify-between'}>
-              <Button
+              <button
+                type={'reset'}
                 className={
                   'bg-primary text-white hover:bg-background-secondary hover:text-primary dark:text-black dark:hover:text-white'
                 }
               >
                 Discard
-              </Button>
-              <Button
+              </button>
+              <button
+                type={'submit'}
                 className={
                   'bg-primary text-white hover:bg-background-secondary hover:text-primary dark:text-black dark:hover:text-white'
                 }
               >
                 Create
-              </Button>
+              </button>
             </div>
+          </form>
+          <SheetFooter className={'my-4'}>
+            <SheetClose asChild className={'mr-4'}>
+              Cancel
+            </SheetClose>
           </SheetFooter>
         </SheetContent>
       </Sheet>
