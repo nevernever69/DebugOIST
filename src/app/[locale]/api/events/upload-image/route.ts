@@ -43,6 +43,7 @@ export async function POST(request: NextRequest) {
     const title = formData.get('title') as string | null
     const description = formData.get('description') as string | null
     const Date = formData.get('Date') as string | null
+    const time = formData.get('time') as string | null
     const registration = formData.get('registration') as string | null
 
     if (!file) {
@@ -72,6 +73,7 @@ export async function POST(request: NextRequest) {
       description,
       Date,
       registration,
+      time,
       publicId: result.public_id
     })
 

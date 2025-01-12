@@ -1,6 +1,7 @@
 import { create } from 'zustand'
 import { persist, devtools, createJSONStorage } from 'zustand/middleware'
 import { immer } from 'zustand/middleware/immer'
+import axios from 'axios'
 
 type EventProps = {
   name: string
@@ -16,8 +17,9 @@ interface EventStoreProps {
   error: string | null
   hydrated: boolean
   setHydrated: () => void
-  addEvent: (event: string) => void
-  updateEvent: (oldEvent: string, newEvent: string) => void
+  addEvent: (event: FormData) => Promise<void>
+  updateEvent: (oldEvent: string, newEvent: string) => Promise<void>
+  getEvents: () => Promise<void>
 }
 
 const useEvent = create<EventStoreProps>()(
@@ -33,12 +35,29 @@ const useEvent = create<EventStoreProps>()(
             hydrated: true
           })
         },
-        addEvent: event => {
-          set(state => {
-            state.events.push(event)
-          })
+        addEvent: async (event: FormData) => {
+          try {
+            set({ loading: true })
+            const req = await axios.post(`/api/events/upload-image`, event, {
+              headers: {
+                'Content-Type': 'multipart/form-data'
+              }
+            })
+            set({
+              events: [...get().events, req.data],
+              error: null
+            })
+          } catch (e: any) {
+            set({
+              error: e.message
+            })
+          } finally {
+            set({
+              loading: false
+            })
+          }
         },
-        updateEvent: (oldEvent, newEvent) => {
+        updateEvent: async (oldEvent, newEvent) => {
           set(state => {
             state.events = state.events.map(event => {
               if (event.name === oldEvent) {
@@ -50,6 +69,24 @@ const useEvent = create<EventStoreProps>()(
               return event
             })
           })
+        },
+        getEvents: async () => {
+          try {
+            set({ loading: true })
+            const req = await axios.get('/api/events')
+            set({
+              events: req.data,
+              error: null
+            })
+          } catch (e: any) {
+            set({
+              error: e.message
+            })
+          } finally {
+            set({
+              loading: false
+            })
+          }
         }
       })),
       {

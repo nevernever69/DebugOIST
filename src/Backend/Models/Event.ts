@@ -4,6 +4,7 @@ interface IEvent {
   title: string
   description: string
   Date: string
+  time: string
   registration: string
   publicId: string
 }
@@ -19,6 +20,10 @@ const EventSchema = new mongoose.Schema<IEvent>(
       required: true
     },
     Date: {
+      type: String,
+      required: true
+    },
+    time: {
       type: String,
       required: true
     },
