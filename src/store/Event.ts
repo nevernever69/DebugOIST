@@ -38,7 +38,7 @@ const useEvent = create<EventStoreProps>()(
         addEvent: async (event: FormData) => {
           try {
             set({ loading: true })
-            const req = await axios.post(`/api/events/upload-image`, event, {
+            const req = await axios.post(`/api/events`, event, {
               headers: {
                 'Content-Type': 'multipart/form-data'
               }

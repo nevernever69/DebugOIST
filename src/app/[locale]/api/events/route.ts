@@ -4,6 +4,7 @@ import { auth } from '@clerk/nextjs/server'
 import { v2 as cloudinary } from 'cloudinary'
 import Event from '@/src/Backend/Models/Event'
 import mongoose from 'mongoose'
+import connect from '@/src/Backend/mongoose'
 
 // Configuration
 cloudinary.config({
@@ -23,7 +24,8 @@ interface CloudinaryUploadResult {
 export async function POST(request: NextRequest) {
   try {
     // @ts-ignore
-    const { userId } = auth()
+    await connect()
+    const { userId } = await auth()
     if (!userId) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
@@ -39,10 +41,10 @@ export async function POST(request: NextRequest) {
       )
     }
     const formData = await request.formData()
-    const file = formData.get('file') as File | null
     const title = formData.get('title') as string | null
     const description = formData.get('description') as string | null
-    const Date = formData.get('Date') as string | null
+    const file = formData.get('thumbnail') as File | null
+    const date = formData.get('date') as string | null
     const time = formData.get('time') as string | null
     const registration = formData.get('registration') as string | null
 
@@ -69,11 +71,11 @@ export async function POST(request: NextRequest) {
     )
 
     const event = await Event.create({
-      title,
-      description,
-      Date,
-      registration,
-      time,
+      title: title,
+      description: description,
+      date: date,
+      time: time,
+      registration: registration,
       publicId: result.public_id
     })
 
@@ -82,8 +84,11 @@ export async function POST(request: NextRequest) {
       { status: 201 }
     )
   } catch (e) {
-    console.log(e, 'Upload video failed')
-    return NextResponse.json({ error: 'upload video failed' }, { status: 500 })
+    console.log(e, 'Event creation failed')
+    return NextResponse.json(
+      { error: 'Event creation failed' },
+      { status: 500 }
+    )
   } finally {
     await mongoose.disconnect()
   }

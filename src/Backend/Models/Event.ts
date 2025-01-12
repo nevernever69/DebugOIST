@@ -3,7 +3,7 @@ import mongoose from 'mongoose'
 interface IEvent {
   title: string
   description: string
-  Date: string
+  date: string
   time: string
   registration: string
   publicId: string
@@ -19,7 +19,7 @@ const EventSchema = new mongoose.Schema<IEvent>(
       type: String,
       required: true
     },
-    Date: {
+    date: {
       type: String,
       required: true
     },

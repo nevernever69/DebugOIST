@@ -1,5 +1,5 @@
 'use client'
-import React, { useEffect } from 'react'
+import React from 'react'
 import {
   Card,
   CardContent,
@@ -46,15 +46,18 @@ import { useForm, SubmitHandler } from 'react-hook-form'
 import { formSchema, FormDataType } from '@/src/Schema/Event'
 import { zodResolver } from '@hookform/resolvers/zod'
 import useEvent from '@/src/store/Event'
+import Image from 'next/image'
+import { usePathname, useRouter } from 'next/navigation'
 
 const EventsComponent: React.FC = () => {
+  const router = useRouter()
+  const pathname = usePathname()
   const {
     handleSubmit,
     register,
     reset,
     setValue,
-    watch,
-    formState: { errors, isSubmitted }
+    formState: { errors }
   } = useForm<FormDataType>({
     resolver: zodResolver(formSchema)
   })
@@ -70,30 +73,20 @@ const EventsComponent: React.FC = () => {
     }
   }
 
-  const watchFile = watch('thumbnail')
-
-  useEffect(() => {
-    console.log('errors', errors)
-    console.log('isSubmitted', isSubmitted)
-    console.log('watchFile', watchFile)
-  }, [errors, isSubmitted])
-
-  const { addEvent, loading, error } = useEvent()
+  const { addEvent, loading } = useEvent()
 
   const onSubmit: SubmitHandler<FormDataType> = async data => {
     try {
-      console.log('submitting form...')
       const newForm = new FormData()
-      newForm.append('name', data.name)
+      newForm.append('title', data.name)
       newForm.append('description', data.description)
       newForm.append('thumbnail', data.thumbnail as File)
       newForm.append('date', data.date)
       newForm.append('time', data.time)
       newForm.append('registration', data.registration)
 
-      console.log('form data', newForm)
-
       await addEvent(newForm)
+      router.replace(pathname)
     } catch (e: any) {
       console.error('error adding event', e)
     } finally {
@@ -234,10 +227,20 @@ const EventsComponent: React.FC = () => {
             <div className={'flex flex-col space-y-2'}>
               <Label htmlFor={'name'}>Name</Label>
               <Input id={'name'} {...register('name')} />
+              {errors.name && (
+                <span className={'text-xs font-medium text-red-500'}>
+                  {errors.name.message}
+                </span>
+              )}
             </div>
             <div className={'flex flex-col space-y-2'}>
               <Label htmlFor={'description'}>Description</Label>
               <Textarea id={'description'} {...register('description')} />
+              {errors.description && (
+                <span className={'text-xs font-medium text-red-500'}>
+                  {errors.description.message}
+                </span>
+              )}
             </div>
             <div className='flex flex-col space-y-4'>
               <Label
@@ -245,8 +248,10 @@ const EventsComponent: React.FC = () => {
                 className='flex cursor-pointer flex-col items-center justify-center space-y-2 rounded-lg border border-dashed border-selected p-4 text-text-secondary transition-all duration-200 hover:border-selected hover:bg-background-secondary'
               >
                 {preview ? (
-                  <img
+                  <Image
                     src={preview}
+                    width={100}
+                    height={100}
                     alt='Preview'
                     className='h-20 w-20 rounded-lg object-cover'
                   />
@@ -289,14 +294,29 @@ const EventsComponent: React.FC = () => {
               >
                 Discard
               </Button>
+              {errors.thumbnail && (
+                <span className='text-xs font-medium text-red-500'>
+                  {errors.thumbnail.message}
+                </span>
+              )}
             </div>
             <div className={'flex flex-col space-y-2'}>
               <Label htmlFor={'date'}>Date</Label>
               <Input id={'date'} type={'date'} {...register('date')} />
+              {errors.date && (
+                <span className={'text-xs font-medium text-red-500'}>
+                  {errors.date.message}
+                </span>
+              )}
             </div>
             <div className={'flex flex-col space-y-2'}>
               <Label htmlFor={'time'}>Time</Label>
               <Input id={'time'} type={'time'} {...register('time')} />
+              {errors.time && (
+                <span className={'text-xs font-medium text-red-500'}>
+                  {errors.time.message}
+                </span>
+              )}
             </div>
 
             <div className={'flex flex-col space-y-2'}>
@@ -306,24 +326,29 @@ const EventsComponent: React.FC = () => {
                 type={'date'}
                 {...register('registration')}
               />
+              {errors.registration && (
+                <span className={'text-xs font-medium text-red-500'}>
+                  {errors.registration.message}
+                </span>
+              )}
             </div>
             <div className={'flex flex-grow justify-between'}>
-              <button
+              <Button
                 type={'reset'}
                 className={
                   'bg-primary text-white hover:bg-background-secondary hover:text-primary dark:text-black dark:hover:text-white'
                 }
               >
                 Discard
-              </button>
-              <button
+              </Button>
+              <Button
                 type={'submit'}
                 className={
                   'bg-primary text-white hover:bg-background-secondary hover:text-primary dark:text-black dark:hover:text-white'
                 }
               >
-                Create
-              </button>
+                {loading ? 'Creating...' : 'Create Event'}
+              </Button>
             </div>
           </form>
           <SheetFooter className={'my-4'}>
