@@ -1,15 +1,15 @@
-import createIntlMiddleware from 'next-intl/middleware';
-import { NextRequest } from 'next/server';
-import { locales } from './i18n';
-import { localePrefix } from './navigation';
-import { clerkMiddleware, createRouteMatcher } from '@clerk/nextjs/server';
+import createIntlMiddleware from 'next-intl/middleware'
+import { NextRequest } from 'next/server'
+import { locales } from './i18n'
+import { localePrefix } from './navigation'
+import { clerkMiddleware, createRouteMatcher } from '@clerk/nextjs/server'
 
 // Create the intl middleware
 const intlMiddleware = createIntlMiddleware({
   locales,
   defaultLocale: 'en',
   localePrefix
-});
+})
 
 // Define protected routes with locale patterns
 const isProtectedRoute = createRouteMatcher([
@@ -17,21 +17,22 @@ const isProtectedRoute = createRouteMatcher([
   '/:locale/forum(.*)',
   '/dashboard(.*)',
   '/forum(.*)'
-]);
+])
 
 // Combine middlewares
 async function middleware(req: NextRequest) {
-  const intlResponse = await intlMiddleware(req);
+  const intlResponse = await intlMiddleware(req)
 
+  // @ts-ignore
   return clerkMiddleware(async auth => {
     if (isProtectedRoute(req)) {
-      await auth.protect();
+      await auth.protect()
     }
-    return intlResponse;
-  })(req);
+    return intlResponse
+  })(req)
 }
 
-export default middleware;
+export default middleware
 
 export const config = {
   matcher: [
@@ -49,4 +50,4 @@ export const config = {
     // API routes
     '/(api|trpc)(.*)'
   ]
-};
+}

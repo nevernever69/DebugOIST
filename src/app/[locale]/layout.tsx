@@ -10,7 +10,9 @@ import NextTopLoader from 'nextjs-toploader'
 import { Header } from './components/Header'
 import './globals.css'
 import { ClerkProvider } from '@clerk/nextjs'
-import {Footer} from './components/Footer'
+import { Footer } from './components/Footer'
+import React from 'react'
+
 const inter = Inter({
   subsets: ['latin'],
   variable: '--inter'
@@ -45,7 +47,7 @@ export default function RootLayout({
       <html
         lang={locale}
         dir={locale === 'ar' || locale == 'fa' ? 'rtl' : 'ltr'}
-        className={`${space_grotesk.variable} ${rubik.variable} scroll-smooth`}
+        className={`${space_grotesk.variable} ${rubik.variable} ${inter.variable} scroll-smooth`}
         suppressHydrationWarning
       >
         <body>
@@ -80,12 +82,13 @@ export default function RootLayout({
                 showSpinner={false}
               />
               <Header locale={locale} />
-              <main className='mx-auto max-w-screen-2xl'>{children}</main>
+              <main className='mx-auto max-w-screen-2xl'>
+                {children}
+              </main>
             </NextIntlClientProvider>
           </ThemeProvider>
-          <Footer/>
+          <Footer />
         </body>
-     
       </html>
     </ClerkProvider>
   )
