@@ -42,12 +42,12 @@ export async function POST(request: NextRequest) {
       )
     }
     const formData = await request.formData()
-    const title = formData.get('title') as string | null
+    const title = formData.get('eventName') as string | null
     const description = formData.get('description') as string | null
     const file = formData.get('thumbnail') as File | null
-    const date = formData.get('date') as string | null
-    const time = formData.get('time') as string | null
-    const registration = formData.get('registration') as string | null
+    const date = formData.get('eventDate') as string | null
+    const time = formData.get('eventTime') as string | null
+    const registration = formData.get('registrationDate') as string | null
 
     if (!file) {
       return NextResponse.json({ error: 'File not found' }, { status: 400 })
