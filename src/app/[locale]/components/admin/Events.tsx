@@ -9,6 +9,7 @@ import {
   ModalTrigger
 } from '@/src/components/ui/animated-modal'
 import EventForm from '@/src/components/EventForm'
+import { ExpandableEvents } from '@/src/components/EventsList'
 
 const EventsComponent: React.FC = () => {
   return (
@@ -37,6 +38,15 @@ const EventsComponent: React.FC = () => {
             </ModalContent>
           </ModalBody>
         </Modal>
+      </motion.div>
+
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: [20, -5, 0] }}
+        transition={{ duration: 0.5, ease: [0.4, 0.0, 0.2, 1] }}
+        className='mt-8 flex flex-col items-center justify-center gap-4'
+      >
+        <ExpandableEvents />
       </motion.div>
     </HeroHighlight>
   )
