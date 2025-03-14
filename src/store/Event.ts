@@ -2,8 +2,9 @@ import { create } from 'zustand'
 import { persist, devtools, createJSONStorage } from 'zustand/middleware'
 import { immer } from 'zustand/middleware/immer'
 import axios from 'axios'
+import { FormDataType } from '@/src/Schema/Event'
 
-type EventProps = {
+export type EventProps = {
   title: string
   description: string
   date: number
@@ -19,7 +20,7 @@ interface EventStoreProps {
   hydrated: boolean
   setHydrated: () => void
   addEvent: (event: FormData) => Promise<void>
-  updateEvent: (oldEvent: string, newEvent: string) => Promise<void>
+  updateEvent: (publicId: string, newEvent: FormData) => Promise<void>
   getEvents: () => Promise<void>
 }
 
@@ -58,10 +59,10 @@ const useEvent = create<EventStoreProps>()(
             })
           }
         },
-        updateEvent: async (oldEvent, newEvent) => {
+        updateEvent: async (publicId, newEvent) => {
           set(state => {
             state.events = state.events.map(event => {
-              if (event.title === oldEvent) {
+              if (event.title === publicId) {
                 return {
                   ...event,
                   name: newEvent
