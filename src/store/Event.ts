@@ -20,7 +20,7 @@ interface EventStoreProps {
   hydrated: boolean
   setHydrated: () => void
   addEvent: (event: FormData) => Promise<void>
-  updateEvent: (publicId: string, newEvent: FormData) => Promise<void>
+  updateEvent: (eventId: string, newEvent: FormData) => Promise<void>
   getEvents: () => Promise<void>
   deleteEvent: (publicId: string) => Promise<void>
 }
@@ -57,28 +57,55 @@ const useEvent = create<EventStoreProps>()(
             }
           },
 
-          updateEvent: async (publicId: string, newEvent: FormData) => {
+          updateEvent: async (eventId: string, newEvent: FormData) => {
             setLoading(true)
             try {
-              // Assuming a RESTful PATCH endpoint for updating an event
-              const { data } = await axios.patch(
-                `/api/events/${publicId}`,
-                newEvent,
-                {
-                  headers: { 'Content-Type': 'multipart/form-data' }
+              console.log('Updating event with _id:', eventId);
+              
+              // Using MongoDB _id for update
+              const response = await fetch(`/api/events/${eventId}`, {
+                method: 'PATCH',
+                body: newEvent,
+                // Let browser handle Content-Type for FormData
+                headers: {
+                  'Cache-Control': 'no-cache'
                 }
-              )
+              });
+              
+              if (!response.ok) {
+                const errorText = await response.text();
+                console.error('Error response body:', errorText);
+                
+                let errorMessage = `Failed to update event (${response.status})`;
+                try {
+                  const errorData = JSON.parse(errorText);
+                  if (errorData.error) {
+                    errorMessage = errorData.error;
+                  }
+                } catch (e) {
+                  // If JSON parsing fails, use the error text directly
+                  if (errorText) errorMessage = errorText;
+                }
+                
+                throw new Error(errorMessage);
+              }
+              
+              const data = await response.json();
+              
+              // Update the event in state using _id
               set(state => {
                 const index = state.events.findIndex(
-                  event => event.publicId === publicId
+                  event => event._id === eventId
                 )
                 if (index !== -1) {
                   state.events[index] = data
                 }
                 state.error = null
               })
+              // Refresh the events list
               get().getEvents()
             } catch (error: any) {
+              console.error('Event update failed:', error);
               set({ error: error.message })
             } finally {
               setLoading(false)

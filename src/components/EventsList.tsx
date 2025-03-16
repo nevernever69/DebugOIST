@@ -1,10 +1,12 @@
 'use client'
 import Image from 'next/image'
 import React, { useEffect, useId, useRef, useState } from 'react'
-import { AnimatePresence, motion } from 'motion/react'
+import { AnimatePresence, motion } from 'framer-motion'
 import { useOutsideClick } from '@/src/hooks/use-outside-click'
 import useEvent, { EventProps } from '@/src/store/Event'
 import { useRouter } from 'next/navigation'
+import { useToast } from '@/src/components/ui/toast'
+import EditEventModal from './EditEventModal'
 
 // Icon components
 const CloseIcon = ({ className = "w-4 h-4" }: { className?: string }) => (
@@ -26,6 +28,7 @@ export function ExpandableEvents() {
   const [imageError, setImageError] = useState<Record<string, boolean>>({})
   const ref = useRef<HTMLDivElement>(null)
   const id = useId()
+  const { addToast } = useToast()
 
   // Close modal on 'Escape' key press and manage body overflow
   useEffect(() => {
@@ -42,7 +45,7 @@ export function ExpandableEvents() {
 
   // Fetch events once on component mount
   useEffect(() => {
-    ;(async () => {
+    ; (async () => {
       try {
         await getEvents()
       } catch (error) {
@@ -59,11 +62,31 @@ export function ExpandableEvents() {
     try {
       console.log('Deleting event with publicId client:', publicId)
       if (!publicId) return
+
+      // Store event title for the toast message
+      const eventToDelete = events.find(event => event.publicId === publicId)
+      const eventTitle = eventToDelete?.title || 'Untitled event'
+
       await deleteEvent(publicId)
+
+      addToast({
+        title: 'Event deleted',
+        description: `"${eventTitle}" has been removed successfully.`,
+        variant: 'success',
+        duration: 5000
+      })
+
       setActive(null)
       router.refresh()
     } catch (e: any) {
       console.error(e, 'Error deleting event')
+
+      addToast({
+        title: 'Failed to delete event',
+        description: e.message || 'An unexpected error occurred',
+        variant: 'error',
+        duration: 5000
+      })
     }
   }
 
@@ -77,14 +100,14 @@ export function ExpandableEvents() {
 
   // Handle image error
   const handleImageError = (eventId: string) => {
-    setImageError(prev => ({...prev, [eventId]: true}));
+    setImageError(prev => ({ ...prev, [eventId]: true }));
   };
 
   // Filter and sort events - ensure date values exist before sorting 
   const filteredAndSortedEvents = events
-    .filter(event => 
-      event.title.toLowerCase().includes(searchTerm.toLowerCase()) || 
-      (event.description && event.description.toLowerCase().includes(searchTerm.toLowerCase()))
+    .filter(event =>
+      (event.title ? event.title.toLowerCase().includes(searchTerm.toLowerCase()) : false) ||
+      (typeof event.description === 'string' ? event.description.toLowerCase().includes(searchTerm.toLowerCase()) : false)
     )
     .sort((a, b) => {
       if (sortBy === 'date') {
@@ -96,7 +119,7 @@ export function ExpandableEvents() {
         // Handle possible undefined titles
         const titleA = a.title || '';
         const titleB = b.title || '';
-        return isAscending 
+        return isAscending
           ? titleA.localeCompare(titleB)
           : titleB.localeCompare(titleA)
       }
@@ -123,7 +146,7 @@ export function ExpandableEvents() {
           />
         )}
       </AnimatePresence>
-      
+
       {/* Search and filter controls */}
       <div className="w-full mb-6 space-y-3 px-2" style={{ width: '100%', maxWidth: '100%' }}>
         <div className="relative">
@@ -138,7 +161,7 @@ export function ExpandableEvents() {
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
           </svg>
           {searchTerm && (
-            <button 
+            <button
               onClick={() => setSearchTerm('')}
               className="absolute right-3 top-2.5 text-gray-400 hover:text-gray-600"
             >
@@ -146,16 +169,15 @@ export function ExpandableEvents() {
             </button>
           )}
         </div>
-        
+
         <div className="flex flex-wrap gap-2 text-sm">
           <span className="text-neutral-500 dark:text-neutral-400 pt-1">Sort by:</span>
-          <button 
+          <button
             onClick={() => handleToggleSort('date')}
-            className={`px-3 py-1 rounded-full flex items-center gap-1 ${
-              sortBy === 'date' 
-                ? 'bg-purple-100 text-purple-700 dark:bg-purple-900 dark:text-purple-300' 
+            className={`px-3 py-1 rounded-full flex items-center gap-1 ${sortBy === 'date'
+                ? 'bg-purple-100 text-purple-700 dark:bg-purple-900 dark:text-purple-300'
                 : 'bg-gray-100 text-gray-700 dark:bg-neutral-800 dark:text-neutral-300'
-            }`}
+              }`}
           >
             Date
             {sortBy === 'date' && (
@@ -164,13 +186,12 @@ export function ExpandableEvents() {
               </svg>
             )}
           </button>
-          <button 
+          <button
             onClick={() => handleToggleSort('title')}
-            className={`px-3 py-1 rounded-full flex items-center gap-1 ${
-              sortBy === 'title' 
-                ? 'bg-purple-100 text-purple-700 dark:bg-purple-900 dark:text-purple-300' 
+            className={`px-3 py-1 rounded-full flex items-center gap-1 ${sortBy === 'title'
+                ? 'bg-purple-100 text-purple-700 dark:bg-purple-900 dark:text-purple-300'
                 : 'bg-gray-100 text-gray-700 dark:bg-neutral-800 dark:text-neutral-300'
-            }`}
+              }`}
           >
             Title
             {sortBy === 'title' && (
@@ -238,14 +259,11 @@ export function ExpandableEvents() {
                     >
                       {loading ? 'Deleting...' : 'Delete'}
                     </motion.button>
-                    <motion.a
-                      layoutId={`button-edit-${active._id}-${id}`}
-                      href={`/events/${active._id}`}
-                      target='_blank'
-                      className='rounded-full bg-green-500 hover:bg-green-600 px-4 py-2 text-sm font-bold text-white transition-colors'
-                    >
-                      Modify
-                    </motion.a>
+                    <EditEventModal
+                      eventId={active._id || ''}
+                      triggerContent="Modify"
+                      triggerClassName="rounded-full bg-green-500 hover:bg-green-600 px-4 py-2 text-sm font-bold text-white transition-colors"
+                    />
                   </div>
                 </div>
                 <div className='relative px-6 pt-4 pb-6'>
@@ -292,14 +310,14 @@ export function ExpandableEvents() {
           </div>
         ) : null}
       </AnimatePresence>
-      
+
       {loading && events.length === 0 ? (
         <div className="flex flex-col items-center justify-center py-12">
           <div className="h-10 w-10 animate-spin rounded-full border-b-2 border-t-2 border-purple-500 mb-4"></div>
           <p className="text-neutral-600 dark:text-neutral-400">Loading events...</p>
         </div>
       ) : (
-        <motion.ul 
+        <motion.ul
           className="w-full gap-4 divide-y divide-gray-100 dark:divide-neutral-800"
           style={{ width: '100%', maxWidth: '100%' }}
           layout
@@ -370,7 +388,7 @@ export function ExpandableEvents() {
               </motion.li>
             ))
           ) : (
-            <motion.div 
+            <motion.div
               className='text-center py-12 rounded-lg bg-neutral-50 dark:bg-neutral-800/50'
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
@@ -380,7 +398,7 @@ export function ExpandableEvents() {
                 {searchTerm ? 'No matching events found' : 'No events found'}
               </p>
               {searchTerm && (
-                <button 
+                <button
                   onClick={() => setSearchTerm('')}
                   className="text-sm text-purple-600 dark:text-purple-400 hover:underline"
                 >

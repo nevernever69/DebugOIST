@@ -1,7 +1,7 @@
 'use client'
 import React from 'react'
 import { HeroHighlight, Highlight } from '@/src/components/ui/hero-highlight'
-import { motion } from 'motion/react'
+import { motion } from 'framer-motion'
 import {
   Modal,
   ModalBody,
