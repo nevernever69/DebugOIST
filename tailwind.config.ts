@@ -17,7 +17,7 @@ function addVariablesForColors({ addBase, theme }: any) {
 }
 
 const config = {
-  darkMode: 'class', // using "class" (or you can use ['class'] if preferred)
+  darkMode: ['class', 'class'], // using "class" (or you can use ['class'] if preferred)
   content: [
     // Original file content patterns:
     './pages/**/*.{ts,tsx}',
