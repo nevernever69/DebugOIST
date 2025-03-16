@@ -7,9 +7,9 @@ export type EventProps = {
   _id?: string
   title: string
   description: string
-  date: number
-  time: number
-  registration: number
+  date: string
+  time: string
+  registration: string
   publicId: string
 }
 
