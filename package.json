@@ -29,6 +29,7 @@
     "clsx": "^2.1.1",
     "cmdk": "^0.2.1",
     "date-fns": "^4.1.0",
+    "dicons": "^1.1.7",
     "framer-motion": "^12.5.0",
     "immer": "^10.1.1",
     "lucide-react": "^0.471.0",
