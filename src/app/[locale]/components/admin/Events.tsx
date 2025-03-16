@@ -13,18 +13,18 @@ import { ExpandableEvents } from '@/src/components/EventsList'
 
 const EventsComponent: React.FC = () => {
   return (
-    <HeroHighlight className='flex min-h-screen w-full flex-col items-center justify-center p-4'>
+    <div className='w-full rounded-lg'>
       <motion.h1
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: [20, -5, 0] }}
         transition={{ duration: 0.5, ease: [0.4, 0.0, 0.2, 1] }}
-        className='mx-auto my-4 max-w-4xl px-4 text-center text-2xl font-bold leading-relaxed text-neutral-700 dark:text-white md:text-4xl lg:text-5xl lg:leading-snug'
+        className='mx-auto mb-8 text-center text-2xl font-bold leading-relaxed text-neutral-700 dark:text-white md:text-4xl lg:text-5xl'
       >
         <Highlight className='text-black dark:text-white'>
           Manage Events
         </Highlight>
       </motion.h1>
-      <motion.div className='relative flex w-full items-center justify-center'>
+      <motion.div className='relative flex w-full items-center justify-center mb-8'>
         <Modal>
           <ModalTrigger className='group/modal-btn flex h-10 w-40 items-center justify-center rounded-md border border-black bg-black text-white transition hover:bg-gray-800 dark:border-white dark:bg-white dark:text-black dark:hover:bg-gray-300'>
             Create Event
@@ -44,11 +44,11 @@ const EventsComponent: React.FC = () => {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: [20, -5, 0] }}
         transition={{ duration: 0.5, ease: [0.4, 0.0, 0.2, 1] }}
-        className='mt-8 flex flex-col items-center justify-center gap-4'
+        className='w-full'
       >
         <ExpandableEvents />
       </motion.div>
-    </HeroHighlight>
+    </div>
   )
 }
 

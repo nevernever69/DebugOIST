@@ -37,7 +37,7 @@ export const Tabs = ({
   const [hovering, setHovering] = useState(false);
 
   return (
-    <>
+    <div className="w-full" style={{ width: '100%' }}>
       <div
         className={cn(
           "flex flex-row items-center justify-start [perspective:1000px] relative overflow-auto sm:overflow-visible no-visible-scrollbar max-w-full w-full",
@@ -74,14 +74,33 @@ export const Tabs = ({
           </button>
         ))}
       </div>
-      <FadeInDiv
-        tabs={tabs}
-        active={active}
-        key={active.value}
-        hovering={hovering}
-        className={cn("mt-32", contentClassName)}
-      />
-    </>
+      <div className={cn("relative w-full", contentClassName)} style={{ width: '100%' }}>
+        {tabs.map((tab, idx) => (
+          <motion.div
+            key={tab.value}
+            layoutId={tab.value}
+            initial={{ opacity: 0 }}
+            animate={{ 
+              opacity: idx === 0 ? 1 : 0,
+              // Only animate the active tab
+              y: idx === 0 ? [0, 5, 0] : 0,
+            }}
+            transition={{ 
+              opacity: { duration: 0.3 },
+              y: { duration: 0.5 } 
+            }}
+            className={cn(
+              "w-full", 
+              // Only display the active tab, hide others completely
+              idx === 0 ? "block" : "hidden"
+            )}
+            style={{ width: '100%' }}
+          >
+            {tab.content}
+          </motion.div>
+        ))}
+      </div>
+    </div>
   );
 };
 
