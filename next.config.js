@@ -7,8 +7,10 @@ const nextConfig = {
   images: {
     remotePatterns: [
       {
-        // Match any image URL on the domain
         hostname: 'res.cloudinary.com'
+      },
+      {
+        hostname: 'images.unsplash.com'
       }
     ]
   }
