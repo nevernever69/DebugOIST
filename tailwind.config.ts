@@ -41,7 +41,9 @@ const config = {
     },
     extend: {
       backgroundImage: {
-        'span-bg': 'var(--span-bg)'
+        'span-bg': 'var(--span-bg)',
+        'grid-pattern': 'url(/path/to/grid-pattern.png)',
+        'grid-pattern-light': 'url(/path/to/grid-pattern-light.png)'
       },
       colors: {
         background: 'var(--background)',
@@ -60,7 +62,10 @@ const config = {
         buttonSecondary: 'var(--button-secondary)'
       },
       fontFamily: {
-        sans: ['var(--font-space-grotesk)', 'var(--rubik)']
+        sans: [
+          'var(--font-space-grotesk)',
+          'var(--rubik)'
+        ]
       },
       animation: {
         'accordion-down': 'accordion-down 0.2s ease-out',
