@@ -12,6 +12,7 @@ import './globals.css'
 import { ClerkProvider } from '@clerk/nextjs'
 import { Footer } from './components/Footer'
 import React from 'react'
+import { ToastProvider } from '@/src/components/ui/toast'
 
 const inter = Inter({
   subsets: ['latin'],
@@ -82,9 +83,11 @@ export default function RootLayout({
                 showSpinner={false}
               />
               <Header locale={locale} />
-              <main className='mx-auto max-w-screen-2xl'>
-                {children}
-              </main>
+              <ToastProvider>
+                <main className='mx-auto max-w-screen-2xl'>
+                  {children}
+                </main>
+              </ToastProvider>
             </NextIntlClientProvider>
           </ThemeProvider>
           <Footer />
