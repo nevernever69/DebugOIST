@@ -14,6 +14,9 @@ const nextConfig = {
       }, 
       {
         hostname: 'assets.aceternity.com'
+      },
+      {
+        hostname: 'ui.aceternity.com'
       }
       
     ]

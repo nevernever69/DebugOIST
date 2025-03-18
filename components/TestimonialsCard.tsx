@@ -5,31 +5,42 @@ import { GridBackground } from "./spotlight-new";
 const testimonials = [
   {
     author: {
-      name: "Emma Thompson",
-      handle: "@emmaai",
+      name: "Aryan Gupta",
+      handle: "@aryan_code",
       avatar: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=150&h=150&fit=crop&crop=face"
     },
-    text: "Debug Club has transformed how I approach coding problems. The collaboration and support are amazing!",
-    href: "https://twitter.com/emmaai"
+    text: "Debug Club has enhanced my problem-solving skills and helped me crack coding challenges effortlessly!",
+    href: "https://twitter.com/aryan_code"
   },
   {
     author: {
-      name: "David Park",
-      handle: "@davidtech",
+      name: "Sneha Verma",
+      handle: "@sneha_dev",
       avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop&crop=face"
     },
-    text: "The problem-solving sessions have helped me improve my coding speed and accuracy!",
-    href: "https://twitter.com/davidtech"
+    text: "The hands-on coding sessions and peer reviews at Debug Club have boosted my confidence in competitive programming.",
+    href: "https://twitter.com/sneha_dev"
   },
   {
     author: {
-      name: "Sofia Rodriguez",
-      handle: "@sofiaml",
+      name: "Kunal Sharma",
+      handle: "@kunal_debug",
       avatar: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&h=150&fit=crop&crop=face"
     },
-    text: "Being part of this club has made me more confident in competitive programming."
+    text: "Being part of Debug Club has improved my coding logic and introduced me to real-world projects.",
+    href: "https://twitter.com/kunal_debug"
+  },
+  {
+    author: {
+      name: "Priya Singh",
+      handle: "@priya_code",
+      avatar: "https://images.unsplash.com/photo-1518481612320-6c6b791b82f2?w=150&h=150&fit=crop&crop=face"
+    },
+    text: "Debug Club’s collaborative environment and coding challenges have sharpened my problem-solving skills.",
+    href: "https://twitter.com/priya_code"
   }
 ];
+
 
 export function TestimonialsSectionDemo() {
   return (
