@@ -5,6 +5,57 @@ import { GradientHeading } from "./ui/gradient-heading";
 import { LogoCarousel } from "@/components/ui/logo-carousel";
 import { GridBackground } from "./spotlight-new";
 
+export function GolangIcon(props: SVGProps<SVGSVGElement>) {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="256"
+      height="256"
+      viewBox="0 0 256 256"
+      {...props}
+    >
+      <path
+        fill="#00ADD8"
+        d="M128 0C57.31 0 0 57.31 0 128s57.31 128 128 128 128-57.31 128-128S198.69 0 128 0Zm30.07 197.38c-7.12-2.13-14.6-3.9-21.66-5.88-13.04-3.63-26.05-7.42-38.58-12.45-11.75-4.73-23.34-10.52-34.73-16.69-5.07-2.74-10.03-6.04-15.09-9.01a97.44 97.44 0 0 1 1.67-5.71c3.98 2.66 8.03 5.27 12.24 7.56 10.99 5.91 22.26 11.34 33.73 16.38 12.78 5.53 25.8 10.17 38.88 14.64 7.1 2.43 14.35 4.41 21.64 6.43 0 .39-.08.76-.1 1.13Zm26.86-77.94c-.02 2.58-.24 5.16-.6 7.71-1.08 7.72-3.64 14.95-7.78 21.45a32.63 32.63 0 0 1-19.83 13.58c-5.1 1.33-10.45 1.44-15.7.67-7.33-1.04-14.48-3.2-21.48-5.78-9.73-3.53-19.22-7.82-28.47-12.7-8.84-4.68-17.52-9.8-25.96-15.43-3.18-2.11-6.12-4.62-8.96-7.15a54.07 54.07 0 0 1 5.68-7.48c2.82 2.27 5.63 4.6 8.55 6.74 11.3 8.27 23.24 15.6 35.59 21.83 10.6 5.35 21.52 10.1 32.88 13.94 4.83 1.6 9.72 3.12 14.67 4.13 5.03 1.03 10.32.71 15.18-1.35a23.68 23.68 0 0 0 13.8-15.37c1.06-3.46 1.29-7.15 1.31-10.77.04-6.17-1.53-12.12-3.5-17.98-1.94-5.69-4.61-11.13-7.37-16.47a80.23 80.23 0 0 0-8.27-13.44c-.48-.58-.92-1.17-1.38-1.76 1.8-.32 3.58-.72 5.37-1.07 9.44 11.44 17.69 24.24 24.31 38.14 2.46 5.12 4.75 10.35 6.57 15.7.33.99.69 1.99.83 2.99Z"
+      />
+    </svg>
+  );
+}
+
+export function RustIcon(props: SVGProps<SVGSVGElement>) {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="256"
+      height="256"
+      viewBox="0 0 256 256"
+      {...props}
+    >
+      <path
+        fill="#000000"
+        d="M128 0C57.31 0 0 57.31 0 128s57.31 128 128 128 128-57.31 128-128S198.69 0 128 0ZM128 16a112 112 0 1 1 0 224 112 112 0 0 1 0-224Zm55.99 36.6-111.98 111.98h55.99V66.6h55.99Zm-23.95 16.02H96.01v79.97h47.97v-79.97Z"
+      />
+    </svg>
+  );
+}
+
+export function GitHubIcon(props: SVGProps<SVGSVGElement>) {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="256"
+      height="256"
+      viewBox="0 0 256 256"
+      {...props}
+    >
+      <path
+        fill="#000"
+        d="M128 0C57.31 0 0 57.31 0 128s57.31 128 128 128 128-57.31 128-128S198.69 0 128 0Zm-20 208c-1 0-3-2-3-4v-12c-18 4-22-6-22-6-3-7-7-10-7-10-5-3 0-3 0-3 6 0 9 6 9 6 5 8 14 6 17 5 0-4 2-7 4-8-14-2-29-7-29-31 0-7 2-12 6-16-1-2-3-8 1-16 0 0 5-2 17 6 5-1 11-1 16-1s11 0 16 1c12-8 17-6 17-6 4 8 2 14 1 16 4 4 6 9 6 16 0 24-15 29-29 31 2 2 5 6 5 12v17c0 2-2 4-3 4h-13Zm-32-24s1-2 3-2c0 0 2 0 2 2v5s-1 2-3 2-2-2-2-5Zm66-1c2 0 3 2 3 2v5s-1 2-2 2-3-2-3-5c0-3 1-2 2-2Zm-32-6c-11 0-22-2-22-2 0 0-1 2-1 5 0 0 0 3 2 5 0 0 7 2 21 2 14 0 21-2 21-2 2-2 2-5 2-5 0-3-1-5-1-5 0 0-11 2-22 2Z"
+      />
+    </svg>
+  );
+}
+
 function JavaScriptIcon(props: SVGProps<SVGSVGElement>) {
   return (
     <svg
@@ -509,16 +560,16 @@ const NextjsIcon = (props: SVGProps<SVGSVGElement>) => (
     { name: "Apple", id: 1, img: AppleIcon },
     { name: "CEO Supabase", id: 2, img: SupabaseIcon },
     { name: "Vercel", id: 3, img: VercelIcon },
-    { name: "Lowes", id: 4, img: LowesIcon },
+    { name: "Github", id: 4, img: GitHubIcon },
     { name: "Ally", id: 5, img: AllyLogo },
     { name: "Pierre", id: 6, img: PierreIcon },
     { name: "BMW", id: 7, img: BMWIcon },
     { name: "Claude", id: 8, img: ClaudeAIIcon },
     { name: "Nextjs", id: 9, img: NextjsIcon },
     { name: "Tailwind", id: 10, img: TailwindCSSIcon },
-    { name: "Upstash", id: 11, img: UpstashIcon },
+    { name: "Kubernetes", id: 11, img: KubernetesIcon },
     { name: "Typescript", id: 12, img: TypeScriptIcon },
-    { name: "Stripe", id: 13, img: StripeIcon },
+    { name: "Go", id: 13, img: GolangIcon },
     { name: "OpenAI", id: 14, img: OpenAIIconBlack },
     { name: "Python", id: 15, img: PythonIcon },
     { name: "Javascript", id: 16, img: JavaScriptIcon },
@@ -538,7 +589,7 @@ const NextjsIcon = (props: SVGProps<SVGSVGElement>) => (
             <h2 className="text-4xl font-bold tracking-tight bg-clip-text text-transparent bg-gradient-to-b from-neutral-50 to-neutral-400">
               The best coders are already here
             </h2>
-            <a href="https://www.newcult.co" target="_blank">
+            <a href="/" target="_blank">
               <h1 className="text-6xl font-extrabold tracking-tight bg-clip-text text-transparent bg-gradient-to-b from-neutral-50 to-neutral-400 hover:from-neutral-400 hover:to-neutral-50">
                 Explore With Us
               </h1>

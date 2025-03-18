@@ -2,7 +2,7 @@ import { FaGithub, FaLinkedin, FaDiscord, FaInstagram, FaEnvelope } from 'react-
 
 const Footer = () => {
   return (
-    <footer className="bg-[#0f172a] text-gray-400 py-10">
+    <footer className="bg-black text-gray-400 py-10">
       <div className="container mx-auto flex flex-col md:flex-row justify-between items-center px-6">
         {/* Left Section */}
         <div className="mb-6 md:mb-0">
@@ -12,16 +12,13 @@ const Footer = () => {
 
         {/* Center Section */}
         <div className="flex space-x-6 text-sm">
-          <a href="/events" className="hover:text-white transition">Events</a>
-          <a href="/projects" className="hover:text-white transition">Projects</a>
-          <a href="/team" className="hover:text-white transition">Team</a>
-          <a href="/resources" className="hover:text-white transition">Resources</a>
+          <a href="/about" className="hover:text-white transition">About</a>
         </div>
 
         {/* Right Section (Social Media) */}
         <div className="flex space-x-6">
           <a
-            href="https://github.com/devashish2006"
+            href="https://github.com/Nev-Labs"
             target="_blank"
             rel="noopener noreferrer"
             className="hover:text-white transition"
@@ -29,7 +26,7 @@ const Footer = () => {
             <FaGithub size={24} />
           </a>
           <a
-            href="https://linkedin.com/in/your-profile"
+            href="https://www.linkedin.com/company/debugoist/posts/?feedView=all"
             target="_blank"
             rel="noopener noreferrer"
             className="hover:text-white transition"
@@ -45,7 +42,7 @@ const Footer = () => {
             <FaDiscord size={24} />
           </a>
           <a
-            href="https://www.instagram.com/your-profile"
+            href="https://www.instagram.com/debug.oist/"
             target="_blank"
             rel="noopener noreferrer"
             className="hover:text-white transition"
