@@ -151,8 +151,8 @@ export default function EventsPublic() {
           <div className="h-48 overflow-hidden">
             <img
               src={event.publicId 
-                ? `https://res.cloudinary.com/duhapidbx/image/upload/${event.publicId}`
-                : "https://res.cloudinary.com/duhapidbx/image/upload/v1/placeholder-event"}
+                ? `https://res.cloudinary.com/ducshmbin/image/upload/${event.publicId}`
+                : "https://res.cloudinary.com/ducshmbin/image/upload/v1/placeholder-event"}
               alt={event.title}
               className="w-full h-full object-cover object-center transition-transform duration-500 group-hover:scale-110"
             />

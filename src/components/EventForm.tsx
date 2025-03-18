@@ -183,8 +183,8 @@ export default function EventForm({ isEditing = false, eventData = null, onSucce
                 {/* Preview image - either existing or newly selected */}
                 <img
                   src={preview || (eventData?.publicId
-                    ? `https://res.cloudinary.com/duhapidbx/image/upload/${eventData.publicId}`
-                    : "https://res.cloudinary.com/duhapidbx/image/upload/v1/placeholder-event")}
+                    ? `https://res.cloudinary.com/ducshmbin/image/upload/${eventData.publicId}`
+                    : "https://res.cloudinary.com/ducshmbin/image/upload/v1/placeholder-event")}
                   alt="Event thumbnail"
                   className="object-cover object-center w-full h-full transition-opacity hover:opacity-90"
                   onClick={() => document.getElementById('file-input')?.click()}

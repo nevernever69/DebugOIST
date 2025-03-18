@@ -1,11 +1,12 @@
 import type { Config } from 'tailwindcss'
-import flattenColorPalette from 'tailwindcss/lib/util/flattenColorPalette'
 
 /**
  * This plugin adds each Tailwind color as a global CSS variable.
  * For example, the color "gray-200" will become the CSS variable "--gray-200".
  */
 function addVariablesForColors({ addBase, theme }: any) {
+  // Import the module using require() to avoid TypeScript errors
+  const flattenColorPalette = require('tailwindcss/lib/util/flattenColorPalette').default
   const allColors = flattenColorPalette(theme('colors'))
   const newVars = Object.fromEntries(
     Object.entries(allColors).map(([key, val]) => [`--${key}`, val])
