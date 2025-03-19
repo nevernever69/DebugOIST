@@ -17,7 +17,7 @@ const CloseIcon = ({ className = "w-4 h-4" }: { className?: string }) => (
 );
 
 // Default image URL for when publicId is missing
-const DEFAULT_IMAGE_URL = "https://res.cloudinary.com/duhapidbx/image/upload/v1/placeholder-event";
+const DEFAULT_IMAGE_URL = "https://res.cloudinary.com/ducshmbin/image/upload/v1/placeholder-event";
 
 export function ExpandableEvents() {
   const router = useRouter()
@@ -112,7 +112,7 @@ export function ExpandableEvents() {
     if (imageError[eventId] || !publicId) {
       return DEFAULT_IMAGE_URL
     }
-    return `https://res.cloudinary.com/duhapidbx/image/upload/v1/${publicId}`
+    return `https://res.cloudinary.com/ducshmbin/image/upload/v1/${publicId}`
   }
 
   // Toggle showing registrations for an event
