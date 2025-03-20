@@ -1,15 +1,16 @@
 import connect from '@/src/Backend/mongoose';
-import TeamRegistration from '@/src/Backend/Models/TeamRegistration';
+import IndividualRegistration from '@/src/Backend/Models/TeamRegistration';
 import Event from '@/src/Backend/Models/Event';
-import { ObjectId } from 'mongodb';
+import { currentUser } from '@clerk/nextjs/server';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/src/components/ui/badge";
 import { ScrollArea } from "@/src/components/ui/scroll-area";
 import { format } from "date-fns";
 
-async function getRegistrations() {
+async function getRegistrations(userEmail: string) {
     await connect();
-    const registrations = await TeamRegistration.find()
+    // Query for registrations that belong to the current user's email
+    const registrations = await IndividualRegistration.find({ email: userEmail })
         .sort({ createdAt: -1 });
     return registrations;
 }
@@ -21,8 +22,17 @@ async function getEvents() {
 }
 
 export default async function MyRegistrationsPage() {
+    // Get the currently logged in user from Clerk
+    const user = await currentUser();
+    if (!user) {
+        return <div>You must be logged in to view your registrations.</div>;
+    }
+
+    console.log("USer data: ", user.primaryEmailAddress?.emailAddress);
+
+
     const [registrations, events] = await Promise.all([
-        getRegistrations(),
+        getRegistrations(String(user.primaryEmailAddress?.emailAddress)),
         getEvents()
     ]);
 
@@ -84,14 +94,18 @@ export default async function MyRegistrationsPage() {
                                         >
                                             <div className="absolute inset-0 bg-gradient-to-r from-purple-500/5 to-blue-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
 
-                                            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 relative z-10">
+                                            <CardHeader className="flex items-center justify-between space-y-0 pb-2 relative z-10">
                                                 <CardTitle className="text-xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-blue-500">
-                                                    {registration.teamName}
+                                                    {registration.name}
                                                 </CardTitle>
                                                 <Badge
-                                                    variant={registration.status === 'approved' ? 'success' :
-                                                        registration.status === 'rejected' ? 'destructive' :
-                                                            'secondary'}
+                                                    variant={
+                                                        registration.status === 'approved'
+                                                            ? 'success'
+                                                            : registration.status === 'rejected'
+                                                                ? 'destructive'
+                                                                : 'secondary'
+                                                    }
                                                     className="capitalize py-1 px-3"
                                                 >
                                                     {registration.status}
@@ -100,92 +114,115 @@ export default async function MyRegistrationsPage() {
 
                                             <CardContent className="relative z-10">
                                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                                    <div className="space-y-6">
-                                                        {/* Team Leader */}
-                                                        <div className="bg-black/20 rounded-lg p-4 border border-zinc-800/50">
-                                                            <h3 className="text-lg font-semibold text-purple-400 mb-3 flex items-center">
-                                                                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                                                                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
-                                                                    <circle cx="12" cy="7" r="4"></circle>
-                                                                </svg>
-                                                                Team Leader
-                                                            </h3>
-                                                            <div className="space-y-2 text-zinc-300">
-                                                                <p><span className="text-zinc-500">Name:</span> {registration.leaderName}</p>
-                                                                <p><span className="text-zinc-500">Email:</span> {registration.leaderEmail}</p>
-                                                                <p><span className="text-zinc-500">Phone:</span> {registration.leaderPhone}</p>
-                                                                <p><span className="text-zinc-500">Roll:</span> {registration.leaderRoll}</p>
-                                                            </div>
-                                                        </div>
-
-                                                        {/* Team Members */}
-                                                        <div className="bg-black/20 rounded-lg p-4 border border-zinc-800/50">
-                                                            <h3 className="text-lg font-semibold text-purple-400 mb-3 flex items-center">
-                                                                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                                                                    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
-                                                                    <circle cx="9" cy="7" r="4"></circle>
-                                                                    <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
-                                                                    <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
-                                                                </svg>
-                                                                Team Members
-                                                            </h3>
-                                                            <div className="space-y-4">
-                                                                <div className="space-y-1 text-zinc-300 bg-black/20 p-3 rounded-md">
-                                                                    <p className="font-medium text-purple-300">Member 1</p>
-                                                                    <p><span className="text-zinc-500">Name:</span> {registration.member1Name}</p>
-                                                                    <p><span className="text-zinc-500">Roll:</span> {registration.member1Roll}</p>
-                                                                </div>
-                                                                <div className="space-y-1 text-zinc-300 bg-black/20 p-3 rounded-md">
-                                                                    <p className="font-medium text-purple-300">Member 2</p>
-                                                                    <p><span className="text-zinc-500">Name:</span> {registration.member2Name}</p>
-                                                                    <p><span className="text-zinc-500">Roll:</span> {registration.member2Roll}</p>
-                                                                </div>
-                                                            </div>
+                                                    {/* Registrant Info */}
+                                                    <div className="bg-black/20 rounded-lg p-4 border border-zinc-800/50">
+                                                        <h3 className="text-lg font-semibold text-purple-400 mb-3 flex items-center">
+                                                            <svg
+                                                                xmlns="http://www.w3.org/2000/svg"
+                                                                className="h-5 w-5 mr-2"
+                                                                viewBox="0 0 24 24"
+                                                                fill="none"
+                                                                stroke="currentColor"
+                                                                strokeWidth="2"
+                                                                strokeLinecap="round"
+                                                                strokeLinejoin="round"
+                                                            >
+                                                                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                                                                <circle cx="12" cy="7" r="4"></circle>
+                                                            </svg>
+                                                            Registrant Info
+                                                        </h3>
+                                                        <div className="space-y-2 text-zinc-300">
+                                                            <p>
+                                                                <span className="text-zinc-500">Name:</span> {registration.name}
+                                                            </p>
+                                                            <p>
+                                                                <span className="text-zinc-500">Email:</span> {registration.email}
+                                                            </p>
+                                                            <p>
+                                                                <span className="text-zinc-500">Phone:</span> {registration.phone}
+                                                            </p>
+                                                            <p>
+                                                                <span className="text-zinc-500">Roll:</span> {registration.roll}
+                                                            </p>
                                                         </div>
                                                     </div>
 
-                                                    <div className="space-y-6">
-                                                        {/* Event Details */}
-                                                        <div className="bg-black/20 rounded-lg p-4 border border-zinc-800/50">
-                                                            <h3 className="text-lg font-semibold text-purple-400 mb-3 flex items-center">
-                                                                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                                                                    <path d="M21 7v12H3"></path>
-                                                                    <path d="M3 3h18"></path>
-                                                                    <path d="M3 7h18"></path>
-                                                                    <path d="M3 11h18"></path>
-                                                                </svg>
-                                                                Event Details
-                                                            </h3>
-                                                            <div className="space-y-2 text-zinc-300">
-                                                                <p><span className="text-zinc-500">Event:</span> {event?.title}</p>
-                                                                <p><span className="text-zinc-500">Date:</span> {event?.date ? format(new Date(event.date), 'PPP') : 'TBA'}</p>
-                                                                <p><span className="text-zinc-500">Time:</span> {event?.time ? event.time : 'TBA'}</p>
-                                                            </div>
+                                                    {/* Event Details */}
+                                                    <div className="bg-black/20 rounded-lg p-4 border border-zinc-800/50">
+                                                        <h3 className="text-lg font-semibold text-purple-400 mb-3 flex items-center">
+                                                            <svg
+                                                                xmlns="http://www.w3.org/2000/svg"
+                                                                className="h-5 w-5 mr-2"
+                                                                viewBox="0 0 24 24"
+                                                                fill="none"
+                                                                stroke="currentColor"
+                                                                strokeWidth="2"
+                                                                strokeLinecap="round"
+                                                                strokeLinejoin="round"
+                                                            >
+                                                                <path d="M21 7v12H3"></path>
+                                                                <path d="M3 3h18"></path>
+                                                                <path d="M3 7h18"></path>
+                                                                <path d="M3 11h18"></path>
+                                                            </svg>
+                                                            Event Details
+                                                        </h3>
+                                                        <div className="space-y-2 text-zinc-300">
+                                                            <p>
+                                                                <span className="text-zinc-500">Event:</span> {event?.title}
+                                                            </p>
+                                                            <p>
+                                                                <span className="text-zinc-500">Date:</span>{" "}
+                                                                {event?.date ? format(new Date(event.date), "PPP") : "TBA"}
+                                                            </p>
+                                                            <p>
+                                                                <span className="text-zinc-500">Time:</span>{" "}
+                                                                {event?.time ? event.time : "TBA"}
+                                                            </p>
                                                         </div>
+                                                    </div>
+                                                </div>
 
-                                                        {/* Registration Details */}
-                                                        <div className="bg-black/20 rounded-lg p-4 border border-zinc-800/50">
-                                                            <h3 className="text-lg font-semibold text-purple-400 mb-3 flex items-center">
-                                                                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                                                                    <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
-                                                                    <line x1="16" y1="2" x2="16" y2="6"></line>
-                                                                    <line x1="8" y1="2" x2="8" y2="6"></line>
-                                                                    <line x1="3" y1="10" x2="21" y2="10"></line>
-                                                                </svg>
-                                                                Registration Details
-                                                            </h3>
-                                                            <div className="space-y-2 text-zinc-300">
-                                                                <p><span className="text-zinc-500">Registered On:</span> {format(new Date(registration.createdAt), 'PPP')}</p>
-                                                                <p><span className="text-zinc-500">Status:</span>
-                                                                    <span className={`ml-2 inline-block px-2 py-1 rounded-full text-xs font-medium
-                                                                        ${registration.status === 'approved' ? 'bg-green-500/20 text-green-400' :
-                                                                            registration.status === 'rejected' ? 'bg-red-500/20 text-red-400' :
-                                                                                'bg-yellow-500/20 text-yellow-400'}`}>
-                                                                        {registration.status.charAt(0).toUpperCase() + registration.status.slice(1)}
-                                                                    </span>
-                                                                </p>
-                                                            </div>
-                                                        </div>
+                                                {/* Registration Metadata */}
+                                                <div className="mt-4 bg-black/20 rounded-lg p-4 border border-zinc-800/50">
+                                                    <h3 className="text-lg font-semibold text-purple-400 mb-3 flex items-center">
+                                                        <svg
+                                                            xmlns="http://www.w3.org/2000/svg"
+                                                            className="h-5 w-5 mr-2"
+                                                            viewBox="0 0 24 24"
+                                                            fill="none"
+                                                            stroke="currentColor"
+                                                            strokeWidth="2"
+                                                            strokeLinecap="round"
+                                                            strokeLinejoin="round"
+                                                        >
+                                                            <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                                                            <line x1="16" y1="2" x2="16" y2="6"></line>
+                                                            <line x1="8" y1="2" x2="8" y2="6"></line>
+                                                            <line x1="3" y1="10" x2="21" y2="10"></line>
+                                                        </svg>
+                                                        Registration Details
+                                                    </h3>
+                                                    <div className="space-y-2 text-zinc-300">
+                                                        <p>
+                                                            <span className="text-zinc-500">Registered On:</span>{" "}
+                                                            {format(new Date(registration.createdAt), "PPP")}
+                                                        </p>
+                                                        <p>
+                                                            <span className="text-zinc-500">Status:</span>
+                                                            <span
+                                                                className={`ml-2 inline-block px-2 py-1 rounded-full text-xs font-medium ${registration.status === "approved"
+                                                                    ? "bg-green-500/20 text-green-400"
+                                                                    : registration.status === "rejected"
+                                                                        ? "bg-red-500/20 text-red-400"
+                                                                        : "bg-yellow-500/20 text-yellow-400"
+                                                                    }`}
+                                                            >
+                                                                {registration.status.charAt(0).toUpperCase() +
+                                                                    registration.status.slice(1)}
+                                                            </span>
+                                                        </p>
                                                     </div>
                                                 </div>
                                             </CardContent>
@@ -199,4 +236,4 @@ export default async function MyRegistrationsPage() {
             </div>
         </div>
     );
-} 
+}
