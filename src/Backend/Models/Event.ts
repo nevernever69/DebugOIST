@@ -1,6 +1,6 @@
 import mongoose from 'mongoose'
 
-interface IEvent {
+export interface IEvent {
   title: string
   description: string
   date: string
