@@ -10,12 +10,14 @@ const intlMiddleware = createIntlMiddleware({
   localePrefix: 'always' // Keep locale prefix for language routes
 })
 
-// Define protected routes with locale patterns
+// Define protected routes with locale patterns, now including /admin
 const isProtectedRoute = createRouteMatcher([
   '/:locale/dashboard(.*)',
   '/:locale/forum(.*)',
+  '/:locale/admin(.*)', // Added locale admin routes
   '/dashboard(.*)',
-  '/forum(.*)'
+  '/forum(.*)',
+  '/admin(.*)'          // Added admin routes
 ])
 
 // Combine middlewares
@@ -45,9 +47,11 @@ export const config = {
     // Protected routes
     '/dashboard(.*)',
     '/forum(.*)',
+    '/admin(.*)', // Ensure admin routes are matched
     // Language routes with protected paths
     '/(fr|en|ja|de|ru|es|fa|ar)/dashboard(.*)',
     '/(fr|en|ja|de|ru|es|fa|ar)/forum(.*)',
+    '/(fr|en|ja|de|ru|es|fa|ar)/admin(.*)', // Locale-specific admin
     // Base language routes
     '/(fr|en|ja|de|ru|es|fa|ar)/:path*',
     // Clerk's static file matcher

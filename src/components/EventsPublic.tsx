@@ -7,6 +7,8 @@ import { useAuth } from '@clerk/nextjs';
 import { useToast } from '@/src/components/ui/toast';
 import { useRouter } from 'next/navigation';
 import useEventRegistration from '@/src/store/EventRegistration';
+import { useClerk } from '@clerk/nextjs'; // import the hook
+
 
 export default function EventsPublic() {
   const { events, loading, getEvents } = useEvent();
@@ -15,7 +17,8 @@ export default function EventsPublic() {
   const router = useRouter();
   const { registerForEvent, checkIfRegistered, registrations, getRegistrations } = useEventRegistration();
   const [registrationLoading, setRegistrationLoading] = useState<string | null>(null);
-
+  
+  const clerk = useClerk(); // get the clerk instance
   useEffect(() => {
     getEvents();
   }, [getEvents]);
@@ -77,7 +80,8 @@ export default function EventsPublic() {
         variant: 'warning',
         duration: 5000,
       });
-      router.push('/sign-in');
+      // Open the Clerk sign-in modal instead of redirecting
+      clerk.openSignIn();
       return;
     }
 

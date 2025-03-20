@@ -7,13 +7,13 @@ import {
 } from 'next-intl'
 import { Inter, Rubik, Space_Grotesk } from 'next/font/google'
 import NextTopLoader from 'nextjs-toploader'
-import { Header } from './components/Header'
+import  Header  from './components/Header'
 // import './globals.css'
 import '../../css/globals.css';
 
 
 import { ClerkProvider } from '@clerk/nextjs'
-import { Footer } from './components/Footer'
+import  Footer  from './components/Footer'
 import React from 'react'
 import { ToastProvider } from '@/src/components/ui/toast'
 
@@ -58,7 +58,7 @@ export default function RootLayout({
           <ThemeProvider
             enableSystem
             attribute='class'
-            defaultTheme='light'
+            defaultTheme='dark'
             themes={[
               'light',
               'dark',
