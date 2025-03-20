@@ -29,6 +29,10 @@ import {
 import { SplineScene } from "@/components/ui/splite";
 import { Link } from '@/src/navigation';
 import useEvent from '@/src/store/Event';
+import { Modal, ModalBody, ModalContent, ModalTrigger } from '@/src/components/ui/animated-modal';
+import { Label } from '@/components/ui/label';
+import { Input } from '@/components/ui/input';
+import RegistraionModal from './components/Registration';
 //import { Spotlight } from "./ui/spotlight";
 
 export default function DashboardPage() {
@@ -437,9 +441,18 @@ function EventsSection() {
                     </div>
 
                     <div className="mt-6">
-                      <Button className="bg-gradient-to-r from-blue-600/80 to-blue-600/80 hover:from-blue-600 hover:to-blue-600 text-white px-4 py-2 rounded-md text-sm font-medium">
-                        Register
-                      </Button>
+                      <Modal>
+                        <ModalTrigger>
+                          <Button className="bg-gradient-to-r from-blue-600/80 to-blue-600/80 hover:from-blue-600 hover:to-blue-600 text-white px-4 py-2 rounded-md text-sm font-medium">
+                            Register
+                          </Button>
+                        </ModalTrigger>
+                        <ModalBody className='bg-neutral-900 border-none max-h-[90vh] overflow-y-auto'>
+                          <ModalContent className="p-6">
+                            <RegistraionModal event={event} />
+                          </ModalContent>
+                        </ModalBody>
+                      </Modal>
                     </div>
                   </div>
                 </div>
@@ -450,12 +463,12 @@ function EventsSection() {
       </div>
 
       <div className="mt-12 text-center">
-        <Button
-          variant="outline"
-          className="border-zinc-700 hover:bg-zinc-800/50 text-zinc-300 hover:text-white px-6 py-3 rounded-md text-base font-medium"
+        <Link
+          href={"/events"}
+          className="border-zinc-700 bg-zinc-700 hover:bg-zinc-800/50 text-zinc-300 hover:text-white px-6 py-3 rounded-md text-base font-medium"
         >
           View All Events
-        </Button>
+        </Link>
       </div>
     </div>
   );
