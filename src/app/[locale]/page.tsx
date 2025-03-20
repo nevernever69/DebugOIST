@@ -19,31 +19,41 @@ import {
   Code,
   Lightbulb
 } from 'lucide-react';
-import {
-  SignInButton,
-  UserButton,
-  SignedIn,
-  SignedOut,
-  Protect
-} from '@clerk/nextjs';
 import { SplineScene } from "@/components/ui/splite";
 import { Link } from '@/src/navigation';
 import useEvent from '@/src/store/Event';
 import { Modal, ModalBody, ModalContent, ModalTrigger } from '@/src/components/ui/animated-modal';
-import { Label } from '@/components/ui/label';
-import { Input } from '@/components/ui/input';
 import RegistraionModal from './components/Registration';
-//import { Spotlight } from "./ui/spotlight";
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
+import { useRouter } from 'next/navigation'
+import { useForm } from "react-hook-form"
+import { zodResolver } from "@hookform/resolvers/zod"
+import * as z from "zod"
+import { EventProps } from "@/src/store/Event"
+
+const searchSchema = z.object({
+  search: z.string().min(1, "Search query is required")
+});
+
+type SearchFormData = z.infer<typeof searchSchema>;
 
 export default function DashboardPage() {
-  const t = useTranslations('');
+  const router = useRouter();
   const [scrolled, setScrolled] = useState(false);
+  const [isRegistrationOpen, setIsRegistrationOpen] = useState(false);
+  const [selectedEvent, setSelectedEvent] = useState<EventProps | null>(null);
+
+  const { } = useForm<SearchFormData>({
+    resolver: zodResolver(searchSchema)
+  });
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 10);
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
+
+
 
   return (
     <div className="w-full min-h-screen bg-black text-white">
@@ -55,6 +65,14 @@ export default function DashboardPage() {
         <TestimonialsSection />
         <JoinSection />
       </main>
+
+      <Dialog open={isRegistrationOpen} onOpenChange={setIsRegistrationOpen}>
+        <DialogContent className="bg-neutral-900 border-none max-h-[90vh] overflow-y-auto">
+          {selectedEvent && (
+            <RegistraionModal event={selectedEvent} />
+          )}
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

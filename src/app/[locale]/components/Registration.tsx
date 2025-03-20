@@ -77,43 +77,44 @@ const RegistraionModal = ({ event }: { event: EventProps }) => {
             member1Roll: "",
             member2Name: "",
             member2Roll: ""
-        }, mode: "onChange"
+        },
+        mode: "onChange"
     });
 
     const onSubmit = async (data: FormData) => {
         try {
             setIsLoading(true);
-            // Submit data to your API endpoint
-            // const response = await fetch('/api/event-registration', {
-            //     method: 'POST',
-            //     headers: { 'Content-Type': 'application/json' },
-            //     body: JSON.stringify({
-            //         eventId: event._id,
-            //         ...data
-            //     })
-            // });
+            
+            const response = await fetch('/api/event-registration', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    eventId: event._id,
+                    ...data
+                })
+            });
 
-            // if (!response.ok) throw new Error('Registration failed');
+            const result = await response.json();
 
-            // Simulate API call
-            await new Promise(resolve => setTimeout(resolve, 1000));
-            // Show success toast
+            if (!response.ok) {
+                throw new Error(result.error || 'Registration failed');
+            }
+
             addToast({
                 title: "Registration Successful",
                 description: `Your team "${data.teamName}" has been registered for ${event.title}.`,
                 variant: "success"
             });
 
+            reset();
         } catch (error) {
-            // Show error toast
             addToast({
                 title: "Registration Failed",
-                description: "There was an error registering your team. Please try again.",
+                description: error instanceof Error ? error.message : "There was an error registering your team. Please try again.",
                 variant: "error"
             });
         } finally {
             setIsLoading(false);
-            reset()
         }
     };
 
