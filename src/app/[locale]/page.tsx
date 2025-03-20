@@ -1,19 +1,10 @@
 'use client';
 
-import { useTranslations } from 'next-intl';
 import { motion } from 'framer-motion';
 import { useState, useEffect } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from "@/components/ui/button";
 import {
-  Mail,
-  Github,
-  Linkedin,
-  Instagram,
-  MessageCircle,
-  Menu,
-  X,
-  ChevronRight,
   Calendar,
   Users,
   Code,
@@ -24,28 +15,17 @@ import { Link } from '@/src/navigation';
 import useEvent from '@/src/store/Event';
 import { Modal, ModalBody, ModalContent, ModalTrigger } from '@/src/components/ui/animated-modal';
 import RegistraionModal from './components/Registration';
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
+import { Dialog, DialogContent } from "@/components/ui/dialog"
 import { useRouter } from 'next/navigation'
-import { useForm } from "react-hook-form"
-import { zodResolver } from "@hookform/resolvers/zod"
 import * as z from "zod"
 import { EventProps } from "@/src/store/Event"
 
-const searchSchema = z.object({
-  search: z.string().min(1, "Search query is required")
-});
-
-type SearchFormData = z.infer<typeof searchSchema>;
 
 export default function DashboardPage() {
-  const router = useRouter();
   const [scrolled, setScrolled] = useState(false);
   const [isRegistrationOpen, setIsRegistrationOpen] = useState(false);
   const [selectedEvent, setSelectedEvent] = useState<EventProps | null>(null);
 
-  const { } = useForm<SearchFormData>({
-    resolver: zodResolver(searchSchema)
-  });
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 10);

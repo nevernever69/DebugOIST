@@ -1,25 +1,31 @@
 "use client"
 import connect from '@/src/Backend/mongoose';
-import Event from '@/src/Backend/Models/Event';
-import { ObjectId } from 'mongodb';
+import Event, { IEvent } from '@/src/Backend/Models/Event';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { updateEvent } from "../../actions";
 import { notFound } from "next/navigation";
+import { useEffect, useState } from 'react';
 
 async function getEvent(eventId: string) {
     await connect();
-    const event = await Event.findById(new ObjectId(eventId));
+    const event = await Event.findById(eventId);
     if (!event) {
         notFound();
     }
     return event;
 }
 
-export default async function EditEventPage({ params }: { params: { eventId: string } }) {
-    const event = await getEvent(params.eventId);
+export default function EditEventPage({ params }: { params: { eventId: string } }) {
+    const [event, setEvent] = useState<IEvent | null>(null)
+    useEffect(() => {
+        (async () => {
+            const e = await getEvent(params.eventId)
+            setEvent(e);
+        })()
+    }, [])
 
     return (
         <div className="relative min-h-screen bg-black text-zinc-100">
@@ -41,8 +47,8 @@ export default async function EditEventPage({ params }: { params: { eventId: str
                         </CardHeader>
                         <CardContent>
                             <form action={updateEvent} className="space-y-6">
-                                <input type="hidden" name="eventId" value={event._id.toString()} />
-                                
+                                <input type="hidden" name="eventId" value={event?._id?.toString()} />
+
                                 <div className="space-y-2">
                                     <label htmlFor="title" className="text-sm font-medium text-zinc-300">
                                         Event Title
@@ -50,7 +56,7 @@ export default async function EditEventPage({ params }: { params: { eventId: str
                                     <Input
                                         id="title"
                                         name="title"
-                                        defaultValue={event.title}
+                                        defaultValue={event?.title}
                                         className="bg-zinc-900/50 border-zinc-800 text-zinc-100"
                                         required
                                     />
@@ -63,7 +69,7 @@ export default async function EditEventPage({ params }: { params: { eventId: str
                                     <Textarea
                                         id="description"
                                         name="description"
-                                        defaultValue={event.description}
+                                        defaultValue={event?.description}
                                         className="bg-zinc-900/50 border-zinc-800 text-zinc-100 min-h-[100px]"
                                         required
                                     />
@@ -78,7 +84,7 @@ export default async function EditEventPage({ params }: { params: { eventId: str
                                             id="date"
                                             name="date"
                                             type="date"
-                                            defaultValue={event.date.split('T')[0]}
+                                            defaultValue={event?.date.split('T')[0]}
                                             className="bg-zinc-900/50 border-zinc-800 text-zinc-100"
                                             required
                                         />
@@ -92,7 +98,7 @@ export default async function EditEventPage({ params }: { params: { eventId: str
                                             id="time"
                                             name="time"
                                             type="time"
-                                            defaultValue={event.time}
+                                            defaultValue={event?.time}
                                             className="bg-zinc-900/50 border-zinc-800 text-zinc-100"
                                             required
                                         />
@@ -106,7 +112,7 @@ export default async function EditEventPage({ params }: { params: { eventId: str
                                     <Input
                                         id="venue"
                                         name="venue"
-                                        defaultValue={event.venue}
+                                        defaultValue={event?.venue}
                                         className="bg-zinc-900/50 border-zinc-800 text-zinc-100"
                                         required
                                     />
@@ -119,7 +125,7 @@ export default async function EditEventPage({ params }: { params: { eventId: str
                                     <Input
                                         id="category"
                                         name="category"
-                                        defaultValue={event.category}
+                                        defaultValue={event?.category}
                                         className="bg-zinc-900/50 border-zinc-800 text-zinc-100"
                                         required
                                     />
@@ -133,7 +139,7 @@ export default async function EditEventPage({ params }: { params: { eventId: str
                                         id="registrationDeadline"
                                         name="registrationDeadline"
                                         type="datetime-local"
-                                        defaultValue={event.registrationDeadline ? new Date(event.registrationDeadline).toISOString().slice(0, 16) : ''}
+                                        defaultValue={event?.registration ? new Date(event.registration).toISOString().slice(0, 16) : ''}
                                         className="bg-zinc-900/50 border-zinc-800 text-zinc-100"
                                     />
                                 </div>
