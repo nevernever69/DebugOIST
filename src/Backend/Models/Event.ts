@@ -7,6 +7,8 @@ interface IEvent {
   time: string
   registration: string
   publicId: string
+  category: string
+  venue: string
 }
 
 const EventSchema = new mongoose.Schema<IEvent>(
@@ -34,7 +36,15 @@ const EventSchema = new mongoose.Schema<IEvent>(
     publicId: {
       type: String,
       required: true
-    }
+    },
+    category: {
+      type: String,
+      required: true
+    },
+    venue: {
+      type: String,
+      required: true
+    },
   },
   { timestamps: true }
 )

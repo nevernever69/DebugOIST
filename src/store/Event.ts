@@ -9,6 +9,8 @@ export type EventProps = {
   description: string
   date: string
   time: string
+  venue: string
+  category: string
   registration: string
   publicId: string
 }

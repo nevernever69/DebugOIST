@@ -7,6 +7,7 @@ import { useState } from "react"
 import { useToast } from "@/src/components/ui/toast"
 import { zodResolver } from "@hookform/resolvers/zod"
 import * as z from "zod"
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog"
 
 const registrationSchema = z.object({
     teamName: z.string()
@@ -63,6 +64,7 @@ type FormData = z.infer<typeof registrationSchema>;
 
 const RegistraionModal = ({ event }: { event: EventProps }) => {
     const [isLoading, setIsLoading] = useState(false);
+    const [showSuccessModal, setShowSuccessModal] = useState(false);
     const { addToast } = useToast();
 
     const { register, handleSubmit, formState: { errors }, reset } = useForm<FormData>({
@@ -106,6 +108,7 @@ const RegistraionModal = ({ event }: { event: EventProps }) => {
                 variant: "success"
             });
 
+            setShowSuccessModal(true);
             reset();
         } catch (error) {
             addToast({
@@ -241,6 +244,32 @@ const RegistraionModal = ({ event }: { event: EventProps }) => {
                     </Button>
                 </div>
             </form>
+
+            <Dialog open={showSuccessModal} onOpenChange={setShowSuccessModal}>
+                <DialogContent>
+                    <DialogHeader>
+                        <DialogTitle>Registration Successful!</DialogTitle>
+                        <DialogDescription>
+                            Your team has been successfully registered for {event.title}. 
+                            You can check your registration status in the My Registrations page.
+                        </DialogDescription>
+                    </DialogHeader>
+                    <div className="flex justify-end space-x-2">
+                        <Button
+                            onClick={() => setShowSuccessModal(false)}
+                            className="bg-purple-600 hover:bg-purple-700"
+                        >
+                            Close
+                        </Button>
+                        <Button
+                            onClick={() => window.location.href = '/my-registrations'}
+                            className="bg-blue-600 hover:bg-blue-700"
+                        >
+                            View My Registrations
+                        </Button>
+                    </div>
+                </DialogContent>
+            </Dialog>
         </>
     )
 }

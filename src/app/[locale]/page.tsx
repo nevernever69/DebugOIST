@@ -438,7 +438,7 @@ function EventsSection() {
                           Time:
                         </span>
                         <span className="text-zinc-300 text-sm uppercase">
-                          {new Date(event.date).toLocaleTimeString("en-IN", {
+                          {new Date(event.time).toLocaleTimeString("en-IN", {
                             hour: "2-digit",
                             minute: "2-digit",
                           })}
