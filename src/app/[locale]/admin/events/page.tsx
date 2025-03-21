@@ -25,7 +25,7 @@ export default function AdminEventsPage() {
   }, [])
   useEffect(() => {
     getEvents()
-  }, [getEvents, events, deleteEvent])
+  }, [])
 
   async function handleDelete(eventId: string) {
     try {
