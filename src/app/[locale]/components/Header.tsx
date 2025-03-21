@@ -36,9 +36,7 @@ export default function Header({ locale = 'en' }) {
   <Link lang={locale} href="/about" className="text-sm uppercase tracking-wide text-gray-400 hover:text-white">
     About
   </Link>
-  <Link lang={locale} href="/projects" className="text-sm uppercase tracking-wide text-gray-400 hover:text-white">
-    Projects
-  </Link>
+
   <Link lang={locale} href="/events" className="text-sm uppercase tracking-wide text-gray-400 hover:text-white">
     Events
   </Link>
@@ -83,9 +81,7 @@ export default function Header({ locale = 'en' }) {
             <Link lang={locale} href="/about" onClick={() => setMobileMenuOpen(false)} className="text-lg text-gray-400 hover:text-white">
               About
             </Link>
-            <Link lang={locale} href="/projects" onClick={() => setMobileMenuOpen(false)} className="text-lg text-gray-400 hover:text-white">
-              Projects
-            </Link>
+
             <Link lang={locale} href="/events" onClick={() => setMobileMenuOpen(false)} className="text-lg text-gray-400 hover:text-white">
               Events
             </Link>
