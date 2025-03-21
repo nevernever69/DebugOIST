@@ -116,7 +116,7 @@ export default async function EventDetailPage({ params }: PageProps) {
                         <div className="p-6 bg-zinc-900/30 rounded-xl border border-zinc-800/50 flex items-center justify-center">
                             <Button className="w-fit bg-gradient-to-r from-blue-600/80 to-blue-600/80 hover:from-blue-600 hover:to-blue-600 text-white px-6 py-3 rounded-md text-lg font-medium">
                                 <Link href={"/events"}>
-                                    Go Back
+                                    Go To Events
                                 </Link>
                             </Button>
                         </div>

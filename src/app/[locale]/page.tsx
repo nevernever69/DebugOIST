@@ -19,6 +19,7 @@ import { Dialog, DialogContent } from "@/components/ui/dialog"
 import { useRouter } from 'next/navigation'
 import * as z from "zod"
 import { EventProps } from "@/src/store/Event"
+import { format, parse } from 'date-fns';
 
 
 export default function DashboardPage() {
@@ -418,10 +419,7 @@ function EventsSection() {
                           Time:
                         </span>
                         <span className="text-zinc-300 text-sm uppercase">
-                          {new Date(event.time).toLocaleTimeString("en-IN", {
-                            hour: "2-digit",
-                            minute: "2-digit",
-                          })}
+                          {format(parse(event.time, "HH:mm", new Date()), "hh:mm a")}
                         </span>
                       </div>
                       <div className="flex items-center">
