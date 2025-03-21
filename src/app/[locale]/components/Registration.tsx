@@ -168,7 +168,7 @@ const RegistrationModal = ({ event }: { event: EventProps }) => {
                         <DialogTitle>Registration Successful!</DialogTitle>
                         <DialogDescription>
                             You have been successfully registered for {event.title}. You can
-                            check your registration status in the My Registrations page.
+                            check your registration status in the My Dashboard page.
                         </DialogDescription>
                     </DialogHeader>
                     <div className="flex justify-end space-x-2">
@@ -179,10 +179,10 @@ const RegistrationModal = ({ event }: { event: EventProps }) => {
                             Close
                         </Button>
                         <Button
-                            onClick={() => (window.location.href = "/my-registrations")}
+                            onClick={() => (window.location.href = "/dashboard")}
                             className="bg-blue-600 hover:bg-blue-700"
                         >
-                            View My Registrations
+                            View Dashboard
                         </Button>
                     </div>
                 </DialogContent>

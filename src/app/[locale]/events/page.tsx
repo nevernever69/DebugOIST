@@ -1,25 +1,24 @@
-import connect from '@/src/Backend/mongoose';
-import Event from '@/src/Backend/Models/Event';
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+"use client"
+import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/src/components/ui/badge";
-import { format } from "date-fns";
-import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { Metadata } from 'next';
+import { Modal, ModalContent, ModalBody, ModalTrigger } from '@/src/components/ui/animated-modal';
+import RegistrationModal from '../components/Registration';
+import useEvent from '@/src/store/Event';
+import { useEffect } from 'react';
+import { motion } from 'framer-motion';
+import { Calendar } from 'lucide-react';
+import { format, parse } from "date-fns";
+import Link from "next/link";
 
-async function getEvents() {
-    await connect();
-    const events = await Event.find().sort({ date: 1 });
-    return events;
-}
+export default function EventsPage() {
+    const { getEvents, events } = useEvent();
 
-export const metadata: Metadata = {
-  title: 'OIST - Programming Club Events',
-  description: 'Upcoming and past events from the OIST Programming Club',
-};
-
-export default async function EventsPage() {
-    const events = await getEvents();
+    useEffect(() => {
+        (async () => {
+            await getEvents();
+        })();
+    }, []);
 
     return (
         <div className="relative min-h-screen bg-black text-zinc-100">
@@ -38,7 +37,7 @@ export default async function EventsPage() {
                         <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
                             <div>
                                 <h1 className="text-2xl md:text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-blue-500">
-                                    Upcoming Events
+                                    Our Events
                                 </h1>
                                 <p className="text-zinc-400 mt-2">Discover and participate in exciting events</p>
                             </div>
@@ -64,80 +63,120 @@ export default async function EventsPage() {
                     {/* Events grid */}
                     {events.length > 0 && (
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                            {events.map((event) => {
-                                const isUpcoming = new Date(event.date) > new Date();
-                                return (
-                                    <Card
-                                        key={event._id.toString()}
-                                        className="group bg-zinc-900/30 backdrop-blur-md border-zinc-800/50 hover:bg-zinc-900/50 hover:border-zinc-700/50 transition-all duration-300 overflow-hidden"
-                                    >
-                                        <div className="absolute inset-0 bg-gradient-to-r from-purple-500/5 to-blue-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-
-                                        <CardHeader className="relative z-10">
-                                            <div className="flex items-center justify-between mb-2">
-                                                <Badge
-                                                    variant={isUpcoming ? "success" : "secondary"}
-                                                    className="capitalize py-1 px-3"
-                                                >
-                                                    {isUpcoming ? "Upcoming" : "Past"}
-                                                </Badge>
-                                                <Badge variant="outline" className="text-sm py-1 px-3 bg-zinc-900/70 border-zinc-700">
-                                                    {event.category}
-                                                </Badge>
-                                            </div>
-                                            <CardTitle className="text-xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-blue-500">
-                                                {event.title}
-                                            </CardTitle>
-                                        </CardHeader>
-
-                                        <CardContent className="relative z-10">
-                                            <div className="space-y-4">
-                                                <div className="space-y-2 text-zinc-300">
-                                                    <p className="flex items-center">
-                                                        <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-2 text-purple-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                                                            <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
-                                                            <line x1="16" y1="2" x2="16" y2="6"></line>
-                                                            <line x1="8" y1="2" x2="8" y2="6"></line>
-                                                            <line x1="3" y1="10" x2="21" y2="10"></line>
-                                                        </svg>
-                                                        {format(new Date(event.date), 'PPP')}
-                                                    </p>
-                                                    <p className="flex items-center">
-                                                        <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-2 text-purple-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                                                            <circle cx="12" cy="12" r="10"></circle>
-                                                            <polyline points="12 6 12 12 16 14"></polyline>
-                                                        </svg>
-                                                        {event.time}
-                                                    </p>
-                                                    <p className="flex items-center">
-                                                        <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-2 text-purple-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                                                            <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
-                                                            <circle cx="12" cy="10" r="3"></circle>
-                                                        </svg>
-                                                        {event.venue}
-                                                    </p>
+                            {events.map((event, index) => (
+                                <motion.div
+                                    key={event._id || index}
+                                    initial={{ opacity: 0, y: -20 }}
+                                    whileInView={{ opacity: 1, y: 0 }}
+                                    transition={{ delay: index * 0.1, duration: 0.5 }}
+                                    viewport={{ once: true }}
+                                >
+                                    <Card className="overflow-hidden rounded-2xl bg-gradient-to-br from-zinc-900 to-black border border-zinc-800 hover:border-blue-500/30 transition-all duration-300 group hover:shadow-xl">
+                                        <CardContent className="p-4 sm:p-6 md:p-8">
+                                            <div className="flex flex-col gap-4">
+                                                {/* Image Section with left/right banner badges */}
+                                                <div className="relative w-full">
+                                                    {event.publicId ? (
+                                                        <div className="relative w-full aspect-video rounded-xl overflow-hidden group-hover:brightness-90 transition-all duration-300">
+                                                            <img
+                                                                src={`https://res.cloudinary.com/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}/image/upload/${event.publicId}`}
+                                                                alt={event.title}
+                                                                className="w-full h-full object-cover"
+                                                            />
+                                                            {/* Left Banner: Upcoming */}
+                                                            {new Date(event.date) > new Date() && (
+                                                                <div className="absolute top-2 left-2 bg-green-600 text-white text-xs px-3 py-1 rounded-full shadow-lg">
+                                                                    Upcoming
+                                                                </div>
+                                                            )}
+                                                            {/* Right Banner: Category */}
+                                                            {event.category && (
+                                                                <div className="absolute top-2 right-2 bg-blue-600 text-white text-xs px-3 py-1 rounded-full shadow-lg">
+                                                                    {event.category}
+                                                                </div>
+                                                            )}
+                                                        </div>
+                                                    ) : (
+                                                        <div className="relative w-full aspect-square rounded-xl bg-zinc-800/50 flex items-center justify-center p-4 group-hover:brightness-90 transition-all duration-300">
+                                                            <Calendar className="w-6 h-6 text-blue-400 mb-2" />
+                                                            <div className="text-center">
+                                                                <div className="text-sm text-zinc-400">
+                                                                    {new Date(event.date).toLocaleDateString(undefined, {
+                                                                        month: "short",
+                                                                        day: "numeric",
+                                                                    })}
+                                                                </div>
+                                                                <div className="text-lg font-bold text-white">
+                                                                    {new Date(event.date).getDate()}
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    )}
                                                 </div>
 
-                                                <div className="prose prose-invert max-w-none">
-                                                    <p className="text-zinc-400 line-clamp-3">{event.description}</p>
-                                                </div>
+                                                {/* Details Section */}
+                                                <div className="w-full">
+                                                    <h3 className="text-xl font-bold text-white mb-2">{event.title}</h3>
+                                                    <p className="text-zinc-400 mb-4">{event.description}</p>
 
-                                                {isUpcoming && (
-                                                    <Link href={`/events/${event._id}`}>
-                                                        <Button className="w-full bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white shadow-lg shadow-purple-700/20">
-                                                            Register Now
+                                                    {/* Banner Row for details */}
+                                                    <div className="flex flex-col sm:flex-row justify-between items-center bg-zinc-800/70 p-4 rounded-xl">
+                                                        <div className="flex flex-col space-y-1">
+                                                            <span className="text-zinc-500 text-sm">Date & Time</span>
+                                                            <span className="text-zinc-300 text-sm">
+                                                                {new Date(event.date).toLocaleDateString("en-IN", {
+                                                                    day: "numeric",
+                                                                    month: "long",
+                                                                    year: "numeric",
+                                                                })}{" "}
+                                                                @{" "}
+                                                                {format(parse(event.time, "HH:mm", new Date()), "hh:mm a")}
+                                                            </span>
+                                                        </div>
+                                                        <div className="flex flex-col space-y-1 mt-2 sm:mt-0">
+                                                            <span className="text-zinc-500 text-sm">Registration Ends</span>
+                                                            <span className="text-zinc-300 text-sm">
+                                                                {new Date(event.registration).toLocaleDateString("en-IN", {
+                                                                    month: "long",
+                                                                    day: "numeric",
+                                                                    year: "numeric",
+                                                                })}
+                                                            </span>
+                                                        </div>
+                                                    </div>
+
+                                                    <div className="mt-6 flex flex-col w-full justify-between sm:flex-row gap-4">
+                                                        <Modal>
+                                                            <ModalTrigger>
+                                                                <Button className="w-full bg-gradient-to-r from-blue-600/80 to-blue-600/80 hover:from-blue-600 hover:to-blue-600 text-white px-4 rounded-md text-sm font-medium">
+                                                                    Register
+                                                                </Button>
+                                                            </ModalTrigger>
+                                                            <ModalBody className="bg-neutral-900 border-none max-h-[90vh] overflow-y-auto">
+                                                                <ModalContent className="p-6">
+                                                                    <RegistrationModal event={event} />
+                                                                </ModalContent>
+                                                            </ModalBody>
+                                                        </Modal>
+                                                        <Button
+                                                            variant={"ghost"}
+                                                            className="w-fit mt-1 bg-gradient-to-r from-black via-zinc-600/80 to-black hover:from-zinc-600/80 hover:to-zinc-600/80 hover:via-black text-white px-4 rounded-md text-sm font-medium transition-all duration-300 ease-in-out transform hover:scale-105 hover:shadow-lg">
+                                                            <Link href={`/events/${event?._id}`}>
+                                                                View Details
+                                                            </Link>
                                                         </Button>
-                                                    </Link>
-                                                )}
+
+                                                    </div>
+                                                </div>
                                             </div>
                                         </CardContent>
                                     </Card>
-                                );
-                            })}
+                                </motion.div>
+                            ))}
                         </div>
                     )}
                 </div>
             </div>
         </div>
     );
-} 
+}
