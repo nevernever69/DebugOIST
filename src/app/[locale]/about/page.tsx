@@ -5,7 +5,7 @@ import { motion } from "framer-motion";
 
 const coreMembers = [
   {
-    name: "Ashish Bhaghel",
+    name: "Ashish Baghel",
     role: "President",
     contact: "+91-84354 95134",
     image: "/assets/AshishDebugTeam.jpg",
