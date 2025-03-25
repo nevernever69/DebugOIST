@@ -86,7 +86,7 @@ export default function About() {
               </div>
               <h4 className="text-xl font-semibold text-white">{member.name}</h4>
               <p className="text-[#B784F9]">{member.role}</p>
-              <p className="text-gray-400 text-sm mt-2">📞 {member.contact}</p>
+             
             </motion.div>
           ))}
         </div>
