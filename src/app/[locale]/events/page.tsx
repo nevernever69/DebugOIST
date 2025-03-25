@@ -117,7 +117,7 @@ export default function EventsPage() {
                                                 {/* Details Section */}
                                                 <div className="w-full">
                                                     <h3 className="text-xl font-bold text-white mb-2">{event.title}</h3>
-                                                    <p className="text-zinc-400 mb-4">{event.description}</p>
+                                                    <p className="text-zinc-400 mb-4 line-clamp-4">{event.description}</p>
 
                                                     {/* Banner Row for details */}
                                                     <div className="flex flex-col sm:flex-row justify-between items-center bg-zinc-800/70 p-4 rounded-xl">

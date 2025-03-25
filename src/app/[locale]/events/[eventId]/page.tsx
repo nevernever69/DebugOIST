@@ -87,13 +87,14 @@ export default async function EventDetailPage({ params }: PageProps) {
                     <div className="space-y-6">
                         <div className="p-6 bg-zinc-900/30 rounded-xl border border-zinc-800/50">
                             <h2 className="text-2xl font-bold text-white mb-4">About the Event</h2>
-                            <p className="text-zinc-400">{event.description}</p>
+                            <pre className="text-zinc-400 whitespace-pre-wrap break-words">{event.description}</pre>
                         </div>
                         <div className="p-6 bg-zinc-900/30 rounded-xl border border-zinc-800/50">
                             <h2 className="text-xl font-bold text-white mb-2">Registration Deadline</h2>
                             <p className="text-zinc-300">{format(new Date(event.registration), "PPP")}</p>
                         </div>
                     </div>
+
                     {/* Right Column: Date, Time, Venue & Call-to-Action */}
                     <div className="space-y-6">
                         <div className="p-6 bg-zinc-900/30 rounded-xl border border-zinc-800/50">
